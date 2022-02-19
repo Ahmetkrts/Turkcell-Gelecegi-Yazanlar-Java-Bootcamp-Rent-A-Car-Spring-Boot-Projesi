@@ -3,8 +3,12 @@ package com.turkcell.rentACar.api.controller;
 import com.turkcell.rentACar.business.abstracts.ColorService;
 import com.turkcell.rentACar.business.dtos.ColorGetDto;
 import com.turkcell.rentACar.business.dtos.ColorListDto;
-import com.turkcell.rentACar.business.request.*;
+import com.turkcell.rentACar.business.request.CreateColorRequest;
+import com.turkcell.rentACar.business.request.DeleteColorRequest;
+import com.turkcell.rentACar.business.request.UpdateColorRequest;
 import com.turkcell.rentACar.core.exception.BusinessException;
+import com.turkcell.rentACar.core.result.DataResult;
+import com.turkcell.rentACar.core.result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,33 +26,30 @@ public class ColorsController {
     }
 
     @GetMapping("/getall")
-    public List<ColorListDto> getAll() {
+    public DataResult<List<ColorListDto>> getAll() {
 
         return this.colorService.getAll();
     }
 
     @PostMapping("/add")
-    public String add(@RequestBody CreateColorRequest createColorRequest) {
-        try {
-            this.colorService.add(createColorRequest);
-        } catch (Exception e) {
-            return e.getMessage();
-        }
-        return "Eklendi";
+    public Result add(@RequestBody CreateColorRequest createColorRequest) throws BusinessException {
+
+        return this.colorService.add(createColorRequest);
+
     }
 
     @GetMapping("getById")
-    public ColorGetDto getById(@RequestParam int colorId) {
+    public DataResult<ColorGetDto> getById(@RequestParam int colorId) {
         return this.colorService.getById(colorId);
     }
 
     @PostMapping("/update")
-    public void update(@RequestBody UpdateColorRequest updateColorRequest) throws BusinessException {
-        this.colorService.update(updateColorRequest);
+    public Result update(@RequestBody UpdateColorRequest updateColorRequest) throws BusinessException {
+        return this.colorService.update(updateColorRequest);
     }
 
     @DeleteMapping("/delete")
-    public void delete(@RequestBody DeleteColorRequest deleteColorRequest) {
-        this.colorService.delete(deleteColorRequest);
+    public Result delete(@RequestBody DeleteColorRequest deleteColorRequest) {
+        return this.colorService.delete(deleteColorRequest);
     }
 }

@@ -8,11 +8,11 @@ import com.turkcell.rentACar.business.request.DeleteColorRequest;
 import com.turkcell.rentACar.business.request.UpdateColorRequest;
 import com.turkcell.rentACar.core.exception.BusinessException;
 import com.turkcell.rentACar.core.mapping.ModelMapperService;
+import com.turkcell.rentACar.core.result.*;
 import com.turkcell.rentACar.dataAccess.abstracts.ColorDao;
 import com.turkcell.rentACar.entities.concrates.Color;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,50 +30,58 @@ public class ColorManager implements ColorService {
     }
 
     @Override
-    public void add(CreateColorRequest createColorRequest) throws BusinessException {
+    public Result add(CreateColorRequest createColorRequest) throws BusinessException {
         Color color = this.modelMapperService.forRequest().map(createColorRequest, Color.class);
 
         if (checkIfName(color.getName())) {
+
             this.colorDao.save(color);
+            return new SuccessResult("eklendi");
         }
 
+        return new ErrorResult("Eklenemedi isismler Aynı");
     }
 
     @Override
-    public List<ColorListDto> getAll() {
-        List<Color> result = this.colorDao.findAll();
-        return result
+    public DataResult<List<ColorListDto>> getAll() {
+        List<Color> response = this.colorDao.findAll();
+        List<ColorListDto> result = response
                 .stream()
                 .map(color -> this.modelMapperService.forDto().map(color, ColorListDto.class))
                 .collect(Collectors.toList());
+        return new SuccessDataResult<List<ColorListDto>>(result, "Listelendi");
 
     }
 
     @Override
-    public ColorGetDto getById(int colorId) {
-        Color result = this.colorDao.getById(colorId);
-        return this.modelMapperService.forDto().map(result, ColorGetDto.class);
+    public DataResult<ColorGetDto> getById(int colorId) {
+        Color response = this.colorDao.getById(colorId);
+        ColorGetDto result = this.modelMapperService.forDto().map(response, ColorGetDto.class);
+        return new SuccessDataResult<ColorGetDto>("Listelendi");
     }
 
     @Override
-    public void update(UpdateColorRequest updateColorRequest) throws BusinessException {
+    public Result update(UpdateColorRequest updateColorRequest) throws BusinessException {
         Color color = this.modelMapperService.forRequest().map(updateColorRequest, Color.class);
 
         if (checkIfName(color.getName())) {
             this.colorDao.save(color);
+            return new SuccessResult("eklendi");
         }
+        return new ErrorResult("Eklenemedi isismler Aynı");
     }
 
     @Override
-    public void delete(DeleteColorRequest deleteColorRequest) {
+    public Result delete(DeleteColorRequest deleteColorRequest) {
         Color color = this.modelMapperService.forRequest().map(deleteColorRequest, Color.class);
         this.colorDao.delete(color);
+        return new SuccessResult("Veri Silindi");
     }
 
     private boolean checkIfName(String name) throws BusinessException {
-        var result = this.getAll();
+        var result = this.colorDao.findAll();
 
-        for (ColorListDto colorListDto : result) {
+        for (Color colorListDto : result) {
             if (colorListDto.getName().equals(name)) {
                 throw new BusinessException("İsimler Aynı Olamaz");
 

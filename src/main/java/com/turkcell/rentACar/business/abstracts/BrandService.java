@@ -6,23 +6,23 @@ import com.turkcell.rentACar.business.request.CreateBrandRequest;
 import com.turkcell.rentACar.business.request.DeleteBrandRequest;
 import com.turkcell.rentACar.business.request.UpdateBrandRequest;
 import com.turkcell.rentACar.core.exception.BusinessException;
-import com.turkcell.rentACar.entities.concrates.Brand;
+import com.turkcell.rentACar.core.result.DataResult;
+import com.turkcell.rentACar.core.result.Result;
 
 import java.util.List;
 
 
 public interface BrandService {
 
-    void add(CreateBrandRequest createBrandRequest) throws BusinessException;
+    Result add(CreateBrandRequest createBrandRequest) throws BusinessException;
 
-    List<BrandListDto> getAll();
+    DataResult<List<BrandListDto>> getAll();
 
-    BrandGetDto getById(int brandId);
+    DataResult<BrandGetDto> getById(int brandId);
 
-    void update(UpdateBrandRequest updateBrandRequest) throws BusinessException;
+    Result update(UpdateBrandRequest updateBrandRequest) throws BusinessException;
 
-    void delete(DeleteBrandRequest deleteBrandRequest);
-
+    Result delete(DeleteBrandRequest deleteBrandRequest);
 
 
 }

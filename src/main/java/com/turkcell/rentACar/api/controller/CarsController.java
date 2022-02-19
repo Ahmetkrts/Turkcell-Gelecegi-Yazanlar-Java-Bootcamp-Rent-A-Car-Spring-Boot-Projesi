@@ -7,6 +7,8 @@ import com.turkcell.rentACar.business.request.CreateCarRequest;
 import com.turkcell.rentACar.business.request.DeleteCarRequest;
 import com.turkcell.rentACar.business.request.UpdateCarRequest;
 import com.turkcell.rentACar.core.exception.BusinessException;
+import com.turkcell.rentACar.core.result.DataResult;
+import com.turkcell.rentACar.core.result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,32 +26,45 @@ public class CarsController {
     }
 
     @GetMapping("/getall")
-    public List<CarListDto> getAll() {
+    public DataResult<List<CarListDto>> getAll() {
         return this.carService.getAll();
     }
 
     @PostMapping("/add")
-    public String add(@RequestBody CreateCarRequest createCarRequest) {
-        try {
-            this.carService.add(createCarRequest);
-        } catch (Exception e) {
-            return e.getMessage();
-        }
-        return "Eklendi";
+    public Result add(@RequestBody CreateCarRequest createCarRequest) throws BusinessException {
+
+        return this.carService.add(createCarRequest);
+
     }
 
     @GetMapping("getById")
-    public CarGetDto getById(@RequestParam int carId) {
+    public DataResult<CarGetDto> getById(@RequestParam int carId) {
+
         return this.carService.getById(carId);
     }
 
     @PostMapping("/update")
-    public void update(@RequestBody UpdateCarRequest updateCarRequest) throws BusinessException {
-        this.carService.update(updateCarRequest);
+    public Result update(@RequestBody UpdateCarRequest updateCarRequest) throws BusinessException {
+        return this.carService.update(updateCarRequest);
     }
 
     @DeleteMapping("/delete")
-    public void delete(@RequestBody DeleteCarRequest deleteCarRequest) {
-        this.carService.delete(deleteCarRequest);
+    public Result delete(@RequestBody DeleteCarRequest deleteCarRequest) {
+        return this.carService.delete(deleteCarRequest);
+    }
+
+    @GetMapping("findByDailyPriceLessThanEqual")
+    public DataResult<List<CarListDto>> findByDailyPriceLessThanEqual(int dailyPrice) {
+        return this.carService.findByDailyPriceLessThanEqual(dailyPrice);
+    }
+
+    @GetMapping("getAllPage")
+    public DataResult<List<CarListDto>> getAllPage(int pageNo, int pageSize) {
+        return this.carService.getAllPage(pageNo, pageSize);
+    }
+
+    @GetMapping("getAllSort")
+    public DataResult<List<CarListDto>> getAllSort(boolean sort) {
+        return this.carService.getAllSort(sort);
     }
 }

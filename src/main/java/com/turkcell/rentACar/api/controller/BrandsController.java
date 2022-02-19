@@ -7,7 +7,8 @@ import com.turkcell.rentACar.business.request.CreateBrandRequest;
 import com.turkcell.rentACar.business.request.DeleteBrandRequest;
 import com.turkcell.rentACar.business.request.UpdateBrandRequest;
 import com.turkcell.rentACar.core.exception.BusinessException;
-import com.turkcell.rentACar.entities.concrates.Brand;
+import com.turkcell.rentACar.core.result.DataResult;
+import com.turkcell.rentACar.core.result.Result;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,34 +24,31 @@ public class BrandsController {
     }
 
     @GetMapping("/getall")
-    public List<BrandListDto> getAll() {
+    public DataResult<List<BrandListDto>> getAll() {
 
         return this.brandService.getAll();
     }
 
     @PostMapping("/add")
-    public String add(@RequestBody CreateBrandRequest createBrandRequest) {
-        try {
-            this.brandService.add(createBrandRequest);
-        } catch (Exception e) {
-            return e.getMessage();
-        }
-        return "Eklendi";
+    public Result add(@RequestBody CreateBrandRequest createBrandRequest) throws BusinessException {
+
+        return this.brandService.add(createBrandRequest);
+
     }
 
     @GetMapping("/getById")
-    public BrandGetDto getById(@RequestParam int brandId) {
+    public DataResult<BrandGetDto> getById(@RequestParam int brandId) {
         return this.brandService.getById(brandId);
     }
 
     @PostMapping("/update")
-    public void update(@RequestBody UpdateBrandRequest updateBrandRequest) throws BusinessException {
-        this.brandService.update(updateBrandRequest);
+    public Result update(@RequestBody UpdateBrandRequest updateBrandRequest) throws BusinessException {
+        return this.brandService.update(updateBrandRequest);
     }
 
     @DeleteMapping("/delete")
-    public void delete(@RequestBody DeleteBrandRequest deleteBrandRequest) {
-        this.brandService.delete(deleteBrandRequest);
+    public Result delete(@RequestBody DeleteBrandRequest deleteBrandRequest) {
+        return this.brandService.delete(deleteBrandRequest);
     }
 
 

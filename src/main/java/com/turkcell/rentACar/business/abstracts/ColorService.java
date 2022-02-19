@@ -2,22 +2,26 @@ package com.turkcell.rentACar.business.abstracts;
 
 import com.turkcell.rentACar.business.dtos.ColorGetDto;
 import com.turkcell.rentACar.business.dtos.ColorListDto;
-import com.turkcell.rentACar.business.request.*;
+import com.turkcell.rentACar.business.request.CreateColorRequest;
+import com.turkcell.rentACar.business.request.DeleteColorRequest;
+import com.turkcell.rentACar.business.request.UpdateColorRequest;
 import com.turkcell.rentACar.core.exception.BusinessException;
+import com.turkcell.rentACar.core.result.DataResult;
+import com.turkcell.rentACar.core.result.Result;
 
 import java.util.List;
 
 public interface ColorService {
 
-    void add(CreateColorRequest createColorRequest) throws BusinessException;
+    Result add(CreateColorRequest createColorRequest) throws BusinessException;
 
-    List<ColorListDto> getAll();
+    DataResult<List<ColorListDto>> getAll();
 
-    ColorGetDto getById(int colorId);
+    DataResult<ColorGetDto> getById(int colorId);
 
-    void update(UpdateColorRequest updateColorRequest) throws BusinessException;
+    Result update(UpdateColorRequest updateColorRequest) throws BusinessException;
 
-    void delete(DeleteColorRequest deleteColorRequest);
+    Result delete(DeleteColorRequest deleteColorRequest);
 
 }
 //Brand update,delete,getById
