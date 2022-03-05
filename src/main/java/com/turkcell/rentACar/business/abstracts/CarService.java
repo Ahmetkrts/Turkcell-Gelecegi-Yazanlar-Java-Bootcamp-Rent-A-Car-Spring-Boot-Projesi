@@ -28,4 +28,6 @@ public interface CarService {
     DataResult<List<CarListDto>> getAllPage(int pageNo, int pageSize);
 
     DataResult<List<CarListDto>> getAllSort(boolean sort);
+
+    void checkIfCarExist(int carId) throws BusinessException;
 }

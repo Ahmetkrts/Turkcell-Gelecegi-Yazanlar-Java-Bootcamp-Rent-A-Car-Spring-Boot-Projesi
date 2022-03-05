@@ -8,4 +8,6 @@ import java.util.List;
 public interface CarDao extends JpaRepository<Car, Integer> {
     List<Car> findByDailyPriceLessThanEqual(int dailyPrice);
 
+    boolean existsByCarId(int carId);
+
 }

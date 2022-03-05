@@ -9,7 +9,10 @@ import com.turkcell.rentACar.business.request.UpdateBrandRequest;
 import com.turkcell.rentACar.core.exception.BusinessException;
 import com.turkcell.rentACar.core.mapping.ModelMapperManager;
 import com.turkcell.rentACar.core.mapping.ModelMapperService;
-import com.turkcell.rentACar.core.result.*;
+import com.turkcell.rentACar.core.result.DataResult;
+import com.turkcell.rentACar.core.result.Result;
+import com.turkcell.rentACar.core.result.SuccessDataResult;
+import com.turkcell.rentACar.core.result.SuccessResult;
 import com.turkcell.rentACar.dataAccess.abstracts.BrandDao;
 import com.turkcell.rentACar.entities.concrates.Brand;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +35,12 @@ public class BrandManager implements BrandService {
 
     @Override
     public Result add(CreateBrandRequest createBrandRequest) throws BusinessException {
+        checkIfName(createBrandRequest.getName());
+
         Brand brand = this.modelMapperService.forRequest().map(createBrandRequest, Brand.class);
-        if (checkIfName(brand.getName())) {
-            this.brandDao.save(brand);
-            return new SuccessResult("Eklendi");
-        }
-        return new ErrorResult("İsimler Aynı olamaz");
+        this.brandDao.save(brand);
+        return new SuccessResult("Eklendi");
+
     }
 
     @Override
@@ -59,12 +62,11 @@ public class BrandManager implements BrandService {
 
     @Override
     public Result update(UpdateBrandRequest updateBrandRequest) throws BusinessException {
+        checkIfName(updateBrandRequest.getName());
+
         Brand brand = this.modelMapperService.forRequest().map(updateBrandRequest, Brand.class);
-        if (checkIfName(brand.getName())) {
-            this.brandDao.save(brand);
-            return new SuccessResult("GÜncellendi");
-        }
-        return new ErrorResult("İsimler Aynı olamaz");
+        this.brandDao.save(brand);
+        return new SuccessResult("GÜncellendi");
     }
 
     @Override
@@ -74,15 +76,12 @@ public class BrandManager implements BrandService {
         return new SuccessResult("Veri Silindi");
     }
 
-    private boolean checkIfName(String name) throws BusinessException {
-        var result = this.brandDao.findAll();
-        for (Brand brand1 : result) {
-            if (brand1.getName().equals(name)) {
-                throw new BusinessException("İsimler Aynı Olamaz");
+    private void checkIfName(String name) throws BusinessException {
+        if (this.brandDao.existsByName(name)) {
+            throw new BusinessException("İsimler Aynı Olamaz...");
 
-            }
         }
-        return true;
+
 
     }
 }

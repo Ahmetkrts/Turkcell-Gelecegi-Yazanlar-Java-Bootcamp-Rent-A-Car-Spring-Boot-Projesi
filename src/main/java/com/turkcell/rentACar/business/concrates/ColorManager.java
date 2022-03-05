@@ -8,7 +8,10 @@ import com.turkcell.rentACar.business.request.DeleteColorRequest;
 import com.turkcell.rentACar.business.request.UpdateColorRequest;
 import com.turkcell.rentACar.core.exception.BusinessException;
 import com.turkcell.rentACar.core.mapping.ModelMapperService;
-import com.turkcell.rentACar.core.result.*;
+import com.turkcell.rentACar.core.result.DataResult;
+import com.turkcell.rentACar.core.result.Result;
+import com.turkcell.rentACar.core.result.SuccessDataResult;
+import com.turkcell.rentACar.core.result.SuccessResult;
 import com.turkcell.rentACar.dataAccess.abstracts.ColorDao;
 import com.turkcell.rentACar.entities.concrates.Color;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,15 +34,12 @@ public class ColorManager implements ColorService {
 
     @Override
     public Result add(CreateColorRequest createColorRequest) throws BusinessException {
+        checkIfName(createColorRequest.getName());
+
         Color color = this.modelMapperService.forRequest().map(createColorRequest, Color.class);
+        this.colorDao.save(color);
+        return new SuccessResult("eklendi");
 
-        if (checkIfName(color.getName())) {
-
-            this.colorDao.save(color);
-            return new SuccessResult("eklendi");
-        }
-
-        return new ErrorResult("Eklenemedi isismler Aynı");
     }
 
     @Override
@@ -62,13 +62,12 @@ public class ColorManager implements ColorService {
 
     @Override
     public Result update(UpdateColorRequest updateColorRequest) throws BusinessException {
-        Color color = this.modelMapperService.forRequest().map(updateColorRequest, Color.class);
+        checkIfName(updateColorRequest.getName());
 
-        if (checkIfName(color.getName())) {
-            this.colorDao.save(color);
-            return new SuccessResult("eklendi");
-        }
-        return new ErrorResult("Eklenemedi isismler Aynı");
+        Color color = this.modelMapperService.forRequest().map(updateColorRequest, Color.class);
+        this.colorDao.save(color);
+        return new SuccessResult("eklendi");
+
     }
 
     @Override
@@ -78,16 +77,9 @@ public class ColorManager implements ColorService {
         return new SuccessResult("Veri Silindi");
     }
 
-    private boolean checkIfName(String name) throws BusinessException {
-        var result = this.colorDao.findAll();
-
-        for (Color colorListDto : result) {
-            if (colorListDto.getName().equals(name)) {
-                throw new BusinessException("İsimler Aynı Olamaz");
-
-            }
+    private void checkIfName(String name) throws BusinessException {
+        if (this.colorDao.existsByName(name)) {
+            throw new BusinessException("İsimler Aynı Olamaz...");
         }
-        return true;
-
     }
 }

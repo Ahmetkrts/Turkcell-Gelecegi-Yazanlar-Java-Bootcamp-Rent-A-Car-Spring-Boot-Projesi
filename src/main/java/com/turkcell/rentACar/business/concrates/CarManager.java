@@ -38,6 +38,7 @@ public class CarManager implements CarService {
     @Override
     public Result add(CreateCarRequest createCarRequest) throws BusinessException {
         Car car = this.modelMapperService.forRequest().map(createCarRequest, Car.class);
+        car.setCarId(0);
         this.carDao.save(car);
         return new SuccessResult("Car Added");
 
@@ -113,5 +114,11 @@ public class CarManager implements CarService {
                 .map(car -> this.modelMapperService.forDto().map(car, CarListDto.class))
                 .collect(Collectors.toList());
         return new SuccessDataResult<List<CarListDto>>(response, "Listelendi");
+    }
+
+    public void checkIfCarExist(int carId) throws BusinessException {
+        if (!this.carDao.existsByCarId(carId)) {
+            throw new BusinessException("Araç Bulunamadı..");
+        }
     }
 }

@@ -12,6 +12,7 @@ import com.turkcell.rentACar.core.result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -32,7 +33,7 @@ public class ColorsController {
     }
 
     @PostMapping("/add")
-    public Result add(@RequestBody CreateColorRequest createColorRequest) throws BusinessException {
+    public Result add(@RequestBody @Valid CreateColorRequest createColorRequest) throws BusinessException {
 
         return this.colorService.add(createColorRequest);
 
@@ -43,8 +44,8 @@ public class ColorsController {
         return this.colorService.getById(colorId);
     }
 
-    @PostMapping("/update")
-    public Result update(@RequestBody UpdateColorRequest updateColorRequest) throws BusinessException {
+    @PutMapping("/update")
+    public Result update(@RequestBody @Valid UpdateColorRequest updateColorRequest) throws BusinessException {
         return this.colorService.update(updateColorRequest);
     }
 

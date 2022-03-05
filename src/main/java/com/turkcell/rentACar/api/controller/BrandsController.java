@@ -11,6 +11,7 @@ import com.turkcell.rentACar.core.result.DataResult;
 import com.turkcell.rentACar.core.result.Result;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -30,7 +31,7 @@ public class BrandsController {
     }
 
     @PostMapping("/add")
-    public Result add(@RequestBody CreateBrandRequest createBrandRequest) throws BusinessException {
+    public Result add(@RequestBody @Valid CreateBrandRequest createBrandRequest) throws BusinessException {
 
         return this.brandService.add(createBrandRequest);
 
@@ -41,8 +42,8 @@ public class BrandsController {
         return this.brandService.getById(brandId);
     }
 
-    @PostMapping("/update")
-    public Result update(@RequestBody UpdateBrandRequest updateBrandRequest) throws BusinessException {
+    @PutMapping("/update")
+    public Result update(@RequestBody @Valid UpdateBrandRequest updateBrandRequest) throws BusinessException {
         return this.brandService.update(updateBrandRequest);
     }
 
