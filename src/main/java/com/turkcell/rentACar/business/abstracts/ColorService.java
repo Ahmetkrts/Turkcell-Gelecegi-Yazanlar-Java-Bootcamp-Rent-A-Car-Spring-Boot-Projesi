@@ -17,11 +17,11 @@ public interface ColorService {
 
     DataResult<List<ColorListDto>> getAll();
 
-    DataResult<ColorGetDto> getById(int colorId);
+    DataResult<ColorGetDto> getById(int colorId) throws BusinessException;
 
     Result update(UpdateColorRequest updateColorRequest) throws BusinessException;
 
-    Result delete(DeleteColorRequest deleteColorRequest);
+    Result delete(DeleteColorRequest deleteColorRequest) throws BusinessException;
 
 }
 //Brand update,delete,getById

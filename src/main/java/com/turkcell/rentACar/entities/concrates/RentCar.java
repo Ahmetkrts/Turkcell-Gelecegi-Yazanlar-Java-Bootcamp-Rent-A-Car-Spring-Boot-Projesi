@@ -6,7 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
@@ -21,19 +22,31 @@ public class RentCar {
     private int rentCarId;
 
     @Column(name = "date_of_issue")
-    private Date dateOfIssue;
+    private LocalDate dateOfIssue;
     @Column(name = "date_of_receipt")
-    private Date dateOfReceipt;
+    private LocalDate dateOfReceipt;
 
     @Column(name = "rent_first_name")
     private String rentFirstName;
 
     @Column(name = "rent_last_name")
     private String rentLastName;
+    @Column(name = "total_fee")
+    private double totalFee;
 
     @ManyToOne
     @JoinColumn(name = "car_id")
     private Car car;
+
+    @OneToMany(mappedBy = "rentCar")
+    private List<OrderedAdditional> orderedAdditionals;
+
+    @ManyToOne
+    @JoinColumn(name = "from_city_id")
+    private City fromCity;
+    @ManyToOne
+    @JoinColumn(name = "to_city_id")
+    private City toCity;
 
 
 }

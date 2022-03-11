@@ -39,7 +39,7 @@ public class CarsController {
     }
 
     @GetMapping("getById")
-    public DataResult<CarGetDto> getById(@RequestParam int carId) {
+    public DataResult<CarGetDto> getById(@RequestParam int carId) throws BusinessException {
 
         return this.carService.getById(carId);
     }
@@ -50,7 +50,7 @@ public class CarsController {
     }
 
     @DeleteMapping("/delete")
-    public Result delete(@RequestBody DeleteCarRequest deleteCarRequest) {
+    public Result delete(@RequestBody DeleteCarRequest deleteCarRequest) throws BusinessException {
         return this.carService.delete(deleteCarRequest);
     }
 

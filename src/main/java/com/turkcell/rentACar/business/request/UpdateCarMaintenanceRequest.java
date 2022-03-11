@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -22,6 +22,6 @@ public class UpdateCarMaintenanceRequest {
     private String description;
 
     @PastOrPresent
-    private Date returnDate;
+    private LocalDate returnDate;
     private int car_CarId;
 }

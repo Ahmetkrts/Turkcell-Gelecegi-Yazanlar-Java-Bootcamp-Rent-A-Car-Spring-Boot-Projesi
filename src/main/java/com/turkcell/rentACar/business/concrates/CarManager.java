@@ -20,6 +20,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,14 +58,16 @@ public class CarManager implements CarService {
     }
 
     @Override
-    public DataResult<CarGetDto> getById(int carId) {
+    public DataResult<CarGetDto> getById(int carId) throws BusinessException {
+        checkIfCarExist(carId);
         Car car = this.carDao.getById(carId);
         CarGetDto response = this.modelMapperService.forRequest().map(car, CarGetDto.class);
         return new SuccessDataResult<CarGetDto>(response, "Id ye Göre Getirildi.");
     }
 
     @Override
-    public Result update(UpdateCarRequest updateCarRequest) {
+    public Result update(UpdateCarRequest updateCarRequest) throws BusinessException {
+        checkIfCarExist(updateCarRequest.getCarId());
         Car car = this.modelMapperService.forRequest().map(updateCarRequest, Car.class);
         this.carDao.save(car);
 
@@ -71,7 +75,8 @@ public class CarManager implements CarService {
     }
 
     @Override
-    public Result delete(DeleteCarRequest deleteCarRequest) {
+    public Result delete(DeleteCarRequest deleteCarRequest) throws BusinessException {
+        checkIfCarExist(deleteCarRequest.getCarId());
         Car car = this.modelMapperService.forRequest().map(deleteCarRequest, Car.class);
         this.carDao.delete(car);
         return new SuccessResult("Araba Silindi");
@@ -120,5 +125,11 @@ public class CarManager implements CarService {
         if (!this.carDao.existsByCarId(carId)) {
             throw new BusinessException("Araç Bulunamadı..");
         }
+    }
+
+    @Override
+    public double totalCarDailyPriceCalculator(int carId, LocalDate dateOfIssue, LocalDate dateOfReceipt) {
+        int daysBetweenTwoDates = (int) ChronoUnit.DAYS.between(dateOfIssue, dateOfReceipt);
+        return this.carDao.getById(carId).getDailyPrice() * daysBetweenTwoDates;
     }
 }

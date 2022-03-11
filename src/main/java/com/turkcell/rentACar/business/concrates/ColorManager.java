@@ -54,7 +54,8 @@ public class ColorManager implements ColorService {
     }
 
     @Override
-    public DataResult<ColorGetDto> getById(int colorId) {
+    public DataResult<ColorGetDto> getById(int colorId) throws BusinessException {
+        checkIfColorId(colorId);
         Color response = this.colorDao.getById(colorId);
         ColorGetDto result = this.modelMapperService.forDto().map(response, ColorGetDto.class);
         return new SuccessDataResult<ColorGetDto>("Listelendi");
@@ -63,7 +64,7 @@ public class ColorManager implements ColorService {
     @Override
     public Result update(UpdateColorRequest updateColorRequest) throws BusinessException {
         checkIfName(updateColorRequest.getName());
-
+        checkIfColorId(updateColorRequest.getColorId());
         Color color = this.modelMapperService.forRequest().map(updateColorRequest, Color.class);
         this.colorDao.save(color);
         return new SuccessResult("eklendi");
@@ -71,7 +72,8 @@ public class ColorManager implements ColorService {
     }
 
     @Override
-    public Result delete(DeleteColorRequest deleteColorRequest) {
+    public Result delete(DeleteColorRequest deleteColorRequest) throws BusinessException {
+        checkIfColorId(deleteColorRequest.getColorId());
         Color color = this.modelMapperService.forRequest().map(deleteColorRequest, Color.class);
         this.colorDao.delete(color);
         return new SuccessResult("Veri Silindi");
@@ -80,6 +82,12 @@ public class ColorManager implements ColorService {
     private void checkIfName(String name) throws BusinessException {
         if (this.colorDao.existsByName(name)) {
             throw new BusinessException("İsimler Aynı Olamaz...");
+        }
+    }
+
+    private void checkIfColorId(int colorId) throws BusinessException {
+        if (!this.colorDao.existsById(colorId)) {
+            throw new BusinessException(colorId + " No'lu Renk Bulunamadı");
         }
     }
 }

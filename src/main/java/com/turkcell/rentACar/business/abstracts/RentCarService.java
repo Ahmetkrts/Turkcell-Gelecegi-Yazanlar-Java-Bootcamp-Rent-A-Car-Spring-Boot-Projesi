@@ -18,13 +18,13 @@ public interface RentCarService {
 
     Result update(UpdateRentCarRequest updateRentCarRequest) throws BusinessException;
 
-    Result delete(DeleteRentCarRequest deleteRentCarRequest);
+    Result delete(DeleteRentCarRequest deleteRentCarRequest) throws BusinessException;
 
     DataResult<List<RentCarListDto>> getAll();
 
-    DataResult<List<RentCarListDto>> getRentCarsByCarId(int carId);
+    DataResult<List<RentCarListDto>> getRentCarsByCarId(int carId) throws BusinessException;
 
-    DataResult<RentCarGetDto> getById(int rentCarId);
+    DataResult<RentCarGetDto> getById(int rentCarId) throws BusinessException;
 
     void checkIfRentCarReturnDate(int carId) throws BusinessException;
 

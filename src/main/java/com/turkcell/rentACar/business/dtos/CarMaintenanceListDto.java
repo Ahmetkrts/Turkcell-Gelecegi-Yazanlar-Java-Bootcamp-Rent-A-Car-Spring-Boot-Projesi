@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -15,7 +15,7 @@ public class CarMaintenanceListDto {
 
     private int id;
     private String description;
-    private Date returnDate;
+    private LocalDate returnDate;
 
     private String brandName;
 }

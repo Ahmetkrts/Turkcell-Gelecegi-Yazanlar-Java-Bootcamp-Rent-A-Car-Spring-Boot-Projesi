@@ -9,6 +9,7 @@ import com.turkcell.rentACar.core.exception.BusinessException;
 import com.turkcell.rentACar.core.result.DataResult;
 import com.turkcell.rentACar.core.result.Result;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface CarService {
@@ -17,11 +18,11 @@ public interface CarService {
 
     DataResult<List<CarListDto>> getAll();
 
-    DataResult<CarGetDto> getById(int carId);
+    DataResult<CarGetDto> getById(int carId) throws BusinessException;
 
-    Result update(UpdateCarRequest updateCarRequest);
+    Result update(UpdateCarRequest updateCarRequest) throws BusinessException;
 
-    Result delete(DeleteCarRequest deleteCarRequest);
+    Result delete(DeleteCarRequest deleteCarRequest) throws BusinessException;
 
     DataResult<List<CarListDto>> findByDailyPriceLessThanEqual(int dailyPrice);
 
@@ -30,4 +31,6 @@ public interface CarService {
     DataResult<List<CarListDto>> getAllSort(boolean sort);
 
     void checkIfCarExist(int carId) throws BusinessException;
+
+    double totalCarDailyPriceCalculator(int carId, LocalDate dateOfIssue, LocalDate dateOfReceipt);
 }

@@ -17,12 +17,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/colors")
-public class ColorsController {
+public class ColorController {
 
     private ColorService colorService;
 
     @Autowired
-    public ColorsController(ColorService colorService) {
+    public ColorController(ColorService colorService) {
         this.colorService = colorService;
     }
 
@@ -40,7 +40,7 @@ public class ColorsController {
     }
 
     @GetMapping("getById")
-    public DataResult<ColorGetDto> getById(@RequestParam int colorId) {
+    public DataResult<ColorGetDto> getById(@RequestParam int colorId) throws BusinessException {
         return this.colorService.getById(colorId);
     }
 
@@ -50,7 +50,7 @@ public class ColorsController {
     }
 
     @DeleteMapping("/delete")
-    public Result delete(@RequestBody DeleteColorRequest deleteColorRequest) {
+    public Result delete(@RequestBody DeleteColorRequest deleteColorRequest) throws BusinessException {
         return this.colorService.delete(deleteColorRequest);
     }
 }

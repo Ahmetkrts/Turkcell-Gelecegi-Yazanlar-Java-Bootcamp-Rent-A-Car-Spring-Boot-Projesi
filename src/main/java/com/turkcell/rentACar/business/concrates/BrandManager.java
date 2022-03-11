@@ -54,7 +54,8 @@ public class BrandManager implements BrandService {
     }
 
     @Override
-    public DataResult<BrandGetDto> getById(int brandId) {
+    public DataResult<BrandGetDto> getById(int brandId) throws BusinessException {
+        checkIfId(brandId);
         Brand response = this.brandDao.getById(brandId);
         BrandGetDto result = this.modelMapperService.forDto().map(response, BrandGetDto.class);
         return new SuccessDataResult<BrandGetDto>(result, "Listelendi");
@@ -63,14 +64,15 @@ public class BrandManager implements BrandService {
     @Override
     public Result update(UpdateBrandRequest updateBrandRequest) throws BusinessException {
         checkIfName(updateBrandRequest.getName());
-
+        checkIfId(updateBrandRequest.getBrandId());
         Brand brand = this.modelMapperService.forRequest().map(updateBrandRequest, Brand.class);
         this.brandDao.save(brand);
         return new SuccessResult("GÜncellendi");
     }
 
     @Override
-    public Result delete(DeleteBrandRequest deleteBrandRequest) {
+    public Result delete(DeleteBrandRequest deleteBrandRequest) throws BusinessException {
+        checkIfId(deleteBrandRequest.getBrandId());
         Brand brand = this.modelMapperService.forRequest().map(deleteBrandRequest, Brand.class);
         this.brandDao.delete(brand);
         return new SuccessResult("Veri Silindi");
@@ -79,9 +81,12 @@ public class BrandManager implements BrandService {
     private void checkIfName(String name) throws BusinessException {
         if (this.brandDao.existsByName(name)) {
             throw new BusinessException("İsimler Aynı Olamaz...");
-
         }
+    }
 
-
+    private void checkIfId(int brandId) throws BusinessException {
+        if (!this.brandDao.existsById(brandId)) {
+            throw new BusinessException(brandId + " No'lu Marka Bulunamadı");
+        }
     }
 }

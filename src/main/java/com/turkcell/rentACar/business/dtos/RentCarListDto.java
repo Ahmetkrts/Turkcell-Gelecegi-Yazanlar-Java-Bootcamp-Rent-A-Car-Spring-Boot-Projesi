@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -14,11 +14,15 @@ public class RentCarListDto {
 
 
     private int rentCarId;
-    private Date dateOfIssue;
-    private Date dateOfReceipt;
+    private LocalDate dateOfIssue;
+    private LocalDate dateOfReceipt;
     private String rentFirstName;
     private String rentLastName;
     private String brandName;
+    private String description;
+    private double totalFee;
+    private String fromCityName;
+    private String toCityName;
 
 
 }

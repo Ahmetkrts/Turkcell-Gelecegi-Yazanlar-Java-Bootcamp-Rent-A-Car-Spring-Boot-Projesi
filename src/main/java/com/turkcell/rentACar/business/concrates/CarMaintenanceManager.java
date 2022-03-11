@@ -81,14 +81,16 @@ public class CarMaintenanceManager implements CarMaintenanceService {
     }
 
     @Override
-    public DataResult<CarMaintenanceGetDto> getById(int carMaintenanceId) {
+    public DataResult<CarMaintenanceGetDto> getById(int carMaintenanceId) throws BusinessException {
+        checkIfCarMaintenance(carMaintenanceId);
         CarMaintenance result = this.carMaintenanceDao.getById(carMaintenanceId);
         CarMaintenanceGetDto response = this.modelMapperService.forDto().map(result, CarMaintenanceGetDto.class);
         return new SuccessDataResult<CarMaintenanceGetDto>(response, "Listelendi");
     }
 
     @Override
-    public DataResult<List<CarMaintenanceListDto>> getCarMaintenanceByCarId(int carId) {
+    public DataResult<List<CarMaintenanceListDto>> getCarMaintenanceByCarId(int carId) throws BusinessException {
+        this.carService.checkIfCarExist(carId);
         List<CarMaintenance> result = this.carMaintenanceDao.getCarMaintenanceByCarCarId(carId);
         List<CarMaintenanceListDto> response = result.stream()
                 .map(carMaintenance -> this.modelMapperService.forDto().map(carMaintenance, CarMaintenanceListDto.class))

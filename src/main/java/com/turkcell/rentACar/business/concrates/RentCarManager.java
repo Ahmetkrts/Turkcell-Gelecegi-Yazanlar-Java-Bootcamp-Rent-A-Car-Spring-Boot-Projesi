@@ -1,7 +1,6 @@
 package com.turkcell.rentACar.business.concrates;
 
-import com.turkcell.rentACar.business.abstracts.CarMaintenanceService;
-import com.turkcell.rentACar.business.abstracts.RentCarService;
+import com.turkcell.rentACar.business.abstracts.*;
 import com.turkcell.rentACar.business.dtos.RentCarGetDto;
 import com.turkcell.rentACar.business.dtos.RentCarListDto;
 import com.turkcell.rentACar.business.request.CreateRentCarRequest;
@@ -27,23 +26,42 @@ public class RentCarManager implements RentCarService {
     private RentCarDao rentCarDao;
     private ModelMapperService modelMapperService;
     private CarMaintenanceService carMaintenanceService;
+    private OrderedAdditionalService orderedAdditionalService;
+    private AdditionalService additionalService;
+    private CarService carService;
+
 
     @Autowired
     public RentCarManager(RentCarDao rentCarDao,
                           ModelMapperService modelMapperService,
-                          @Lazy CarMaintenanceService carMaintenanceService) {
+                          @Lazy CarMaintenanceService carMaintenanceService,
+                          @Lazy OrderedAdditionalService orderedAdditionalService,
+                          @Lazy AdditionalService additionalService,
+                          @Lazy CarService carService) {
         this.rentCarDao = rentCarDao;
         this.modelMapperService = modelMapperService;
         this.carMaintenanceService = carMaintenanceService;
+        this.orderedAdditionalService = orderedAdditionalService;
+        this.additionalService = additionalService;
+        this.carService = carService;
     }
 
     @Override
     public Result add(CreateRentCarRequest createRentCarRequest) throws BusinessException {
         this.carMaintenanceService.checkIfCarMaintenanceReturnDate(createRentCarRequest.getCarId());
         checkIfRentCarReturnDate(createRentCarRequest.getCarId());
+
         RentCar rentCar = this.modelMapperService.forRequest().map(createRentCarRequest, RentCar.class);
         rentCar.setRentCarId(0);
-        this.rentCarDao.save(rentCar);
+
+        double additionalTotalFee = this.additionalService.totalAdditionalFeeCalculator(createRentCarRequest.getAdditionalsIds());
+        double carDayOfDailyPriceTotalFee = this.carService.totalCarDailyPriceCalculator(rentCar.getCar().getCarId(), createRentCarRequest.getDateOfIssue(), createRentCarRequest.getDateOfReceipt());
+        double differerntCityTotalFee = rentCar.getToCity().getId() == rentCar.getFromCity().getId() ? 0 : 750;
+        rentCar.setTotalFee(additionalTotalFee + carDayOfDailyPriceTotalFee + differerntCityTotalFee);
+
+        RentCar retunrRentCar = this.rentCarDao.save(rentCar);
+
+        this.orderedAdditionalService.addAdditionals(retunrRentCar.getRentCarId(), createRentCarRequest.getAdditionalsIds());
         return new SuccessResult("Added");
     }
 
@@ -51,13 +69,22 @@ public class RentCarManager implements RentCarService {
     public Result update(UpdateRentCarRequest updateRentCarRequest) throws BusinessException {
         checkIfRentCar(updateRentCarRequest.getRentCarId());
         this.carMaintenanceService.checkIfCarMaintenanceReturnDate(updateRentCarRequest.getCarId());
+
         RentCar rentCar = this.modelMapperService.forRequest().map(updateRentCarRequest, RentCar.class);
-        this.rentCarDao.save(rentCar);
+
+        double additionalTotalFee = this.additionalService.totalAdditionalFeeCalculator(updateRentCarRequest.getAdditionalsIds());
+        double carDayOfDailyPriceTotalFee = this.carService.totalCarDailyPriceCalculator(rentCar.getRentCarId(), updateRentCarRequest.getDateOfIssue(), updateRentCarRequest.getDateOfReceipt());
+        double differerntCityTotalFee = rentCar.getToCity().getId() == rentCar.getFromCity().getId() ? 0 : 750;
+        rentCar.setTotalFee(additionalTotalFee + carDayOfDailyPriceTotalFee + differerntCityTotalFee);
+        RentCar retunrRentCar = this.rentCarDao.save(rentCar);
+        this.orderedAdditionalService.addAdditionals(retunrRentCar.getRentCarId(), updateRentCarRequest.getAdditionalsIds());
+
         return new SuccessResult("updated");
     }
 
     @Override
-    public Result delete(DeleteRentCarRequest deleteRentCarRequest) {
+    public Result delete(DeleteRentCarRequest deleteRentCarRequest) throws BusinessException {
+        checkIfRentCar(deleteRentCarRequest.getRentCarId());
         RentCar rentCar = this.modelMapperService.forRequest().map(deleteRentCarRequest, RentCar.class);
         this.rentCarDao.delete(rentCar);
         return new SuccessResult("deleted");
@@ -73,7 +100,8 @@ public class RentCarManager implements RentCarService {
     }
 
     @Override
-    public DataResult<List<RentCarListDto>> getRentCarsByCarId(int carId) {
+    public DataResult<List<RentCarListDto>> getRentCarsByCarId(int carId) throws BusinessException {
+        this.carService.checkIfCarExist(carId);
         List<RentCar> result = this.rentCarDao.getRentCarByCar_CarId(carId);
         List<RentCarListDto> response = result.stream()
                 .map(rentCar -> this.modelMapperService.forDto().map(rentCar, RentCarListDto.class))
@@ -82,7 +110,8 @@ public class RentCarManager implements RentCarService {
     }
 
     @Override
-    public DataResult<RentCarGetDto> getById(int rentCarId) {
+    public DataResult<RentCarGetDto> getById(int rentCarId) throws BusinessException {
+        checkIfRentCar(rentCarId);
         RentCar result = this.rentCarDao.getById(rentCarId);
         RentCarGetDto response = this.modelMapperService.forDto().map(result, RentCarGetDto.class);
         return new SuccessDataResult<RentCarGetDto>(response, "Listelendi..");
@@ -99,6 +128,10 @@ public class RentCarManager implements RentCarService {
         if (!this.rentCarDao.existsByRentCarId(rentCarId)) {
             throw new BusinessException("Araç Kiralama Kayıtı Bulunamadı");
         }
+    }
+
+    private double carDayOfDailyPriceCalculator(int fromCityId, int toCityId) {
+        return fromCityId == toCityId ? 0 : 750;
     }
 
 

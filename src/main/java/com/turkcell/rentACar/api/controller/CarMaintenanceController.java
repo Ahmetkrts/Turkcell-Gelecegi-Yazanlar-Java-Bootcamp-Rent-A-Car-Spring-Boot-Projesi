@@ -42,12 +42,12 @@ public class CarMaintenanceController {
     }
 
     @GetMapping("/getById")
-    DataResult<CarMaintenanceGetDto> getById(@RequestParam int carMaintenanceId) {
+    DataResult<CarMaintenanceGetDto> getById(@RequestParam int carMaintenanceId) throws BusinessException {
         return this.carMaintenanceService.getById(carMaintenanceId);
     }
 
     @GetMapping("/getCarMaintenanceByCarId")
-    DataResult<List<CarMaintenanceListDto>> getCarMaintenanceByCarId(@RequestParam int carId) {
+    DataResult<List<CarMaintenanceListDto>> getCarMaintenanceByCarId(@RequestParam int carId) throws BusinessException {
         return this.carMaintenanceService.getCarMaintenanceByCarId(carId);
     }
 

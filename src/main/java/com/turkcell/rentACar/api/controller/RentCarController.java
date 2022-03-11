@@ -20,6 +20,8 @@ import java.util.List;
 public class RentCarController {
     private RentCarService rentCarService;
 
+    //ismi rental olucak rentalcar olucak
+
     @Autowired
     public RentCarController(RentCarService rentCarService) {
         this.rentCarService = rentCarService;
@@ -36,7 +38,7 @@ public class RentCarController {
     }
 
     @DeleteMapping("/delete")
-    Result delete(@RequestBody DeleteRentCarRequest deleteRentCarRequest) {
+    Result delete(@RequestBody DeleteRentCarRequest deleteRentCarRequest) throws BusinessException {
         return this.rentCarService.delete(deleteRentCarRequest);
     }
 
@@ -46,12 +48,12 @@ public class RentCarController {
     }
 
     @GetMapping("/getRentCarsByCarId")
-    DataResult<List<RentCarListDto>> getRentCarsByCarId(@RequestParam int carId) {
+    DataResult<List<RentCarListDto>> getRentCarsByCarId(@RequestParam int carId) throws BusinessException {
         return this.rentCarService.getRentCarsByCarId(carId);
     }
 
     @GetMapping("/getById")
-    DataResult<RentCarGetDto> getById(@RequestParam int rentCarId) {
+    DataResult<RentCarGetDto> getById(@RequestParam int rentCarId) throws BusinessException {
         return this.rentCarService.getById(rentCarId);
     }
 }

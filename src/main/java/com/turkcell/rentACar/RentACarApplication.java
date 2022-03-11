@@ -36,6 +36,16 @@ public class RentACarApplication {
     //CRUD Operations,getByCarId,Create,Update,Delete
     //bakımda olan araç kiraya verilemez
 
+    //arabalar kiralanırken müşteriler ek hizmetler alabilir bebe koltugu ,scoter vs AdditionalService
+    //Arabalar kiralanırken farklı bir şehire bırakılabilir
+    //Kiralamaya 750 tl eklenir
+
+    //OrderedAdditionalService
+
+    //-----------------
+
+
+
     @ExceptionHandler
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     public ErrorDataResult<Object> handleValidationErrors(MethodArgumentNotValidException argumentNotValidException) {
@@ -51,9 +61,7 @@ public class RentACarApplication {
     @ExceptionHandler
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     public ErrorDataResult<Object> handleBusinessErrors(BusinessException businessException) {
-
-        ErrorDataResult<Object> error = new ErrorDataResult<Object>(businessException.getMessage(), "Business Error");
-        return error;
+        return new ErrorDataResult<Object>(businessException.getMessage(), "Business Error");
     }
 
 }

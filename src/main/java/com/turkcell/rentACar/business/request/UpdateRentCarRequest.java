@@ -6,7 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -16,12 +17,18 @@ public class UpdateRentCarRequest {
 
     private int rentCarId;
     @NotNull
-    private Date dateOfIssue;
-    private Date dateOfReceipt;
+    private LocalDate dateOfIssue;
+    private LocalDate dateOfReceipt;
     @NotNull
     private String rentFirstName;
     private String rentLastName;
+    @NotNull
     private int carId;
+    private List<Integer> AdditionalsIds;
+    @NotNull
+    private int fromCityId;
+    @NotNull
+    private int toCityId;
 
 
 }

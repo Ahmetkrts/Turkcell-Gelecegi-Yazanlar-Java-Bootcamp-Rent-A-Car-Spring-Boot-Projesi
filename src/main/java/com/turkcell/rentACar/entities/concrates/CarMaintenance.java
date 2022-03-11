@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -22,7 +22,7 @@ public class CarMaintenance {
     @Column(name = "description")
     private String description;
     @Column(name = "return_date")
-    private Date returnDate;
+    private LocalDate returnDate;
 
     @ManyToOne
     @JoinColumn(name = "car_id")

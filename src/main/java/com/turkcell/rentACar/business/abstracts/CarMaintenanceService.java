@@ -19,9 +19,9 @@ public interface CarMaintenanceService {
 
     Result delete(DeleteCarMaintenanceRequest deleteCarMaintenanceRequest) throws BusinessException;
 
-    DataResult<CarMaintenanceGetDto> getById(int carMaintenanceId);
+    DataResult<CarMaintenanceGetDto> getById(int carMaintenanceId) throws BusinessException;
 
-    DataResult<List<CarMaintenanceListDto>> getCarMaintenanceByCarId(int carId);
+    DataResult<List<CarMaintenanceListDto>> getCarMaintenanceByCarId(int carId) throws BusinessException;
 
     DataResult<List<CarMaintenanceListDto>> getAll();
 
