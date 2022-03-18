@@ -1,11 +1,11 @@
 package com.turkcell.rentACar.business.concrates;
 
 import com.turkcell.rentACar.business.abstracts.AdditionalService;
-import com.turkcell.rentACar.business.dtos.AdditionalGetDto;
-import com.turkcell.rentACar.business.dtos.AdditionalListDto;
-import com.turkcell.rentACar.business.request.CreateAdditionalRequest;
-import com.turkcell.rentACar.business.request.DeleteAdditionalRequest;
-import com.turkcell.rentACar.business.request.UpdateAdditionalRequest;
+import com.turkcell.rentACar.business.dtos.additional.AdditionalGetDto;
+import com.turkcell.rentACar.business.dtos.additional.AdditionalListDto;
+import com.turkcell.rentACar.business.request.additional.CreateAdditionalRequest;
+import com.turkcell.rentACar.business.request.additional.DeleteAdditionalRequest;
+import com.turkcell.rentACar.business.request.additional.UpdateAdditionalRequest;
 import com.turkcell.rentACar.core.exception.BusinessException;
 import com.turkcell.rentACar.core.mapping.ModelMapperService;
 import com.turkcell.rentACar.core.result.DataResult;
@@ -34,8 +34,10 @@ public class AdditionalManager implements AdditionalService {
     @Override
     public Result add(CreateAdditionalRequest createAdditionalRequest) throws BusinessException {
         checkIfNameExists(createAdditionalRequest.getName());
+
         Additional response = this.modelMapperService.forRequest().map(createAdditionalRequest, Additional.class);
         this.additionalDao.save(response);
+
         return new SuccessResult("Eklendi");
     }
 
@@ -43,17 +45,20 @@ public class AdditionalManager implements AdditionalService {
     public Result update(UpdateAdditionalRequest updateAdditionalRequest) throws BusinessException {
         checkIfNameExists(updateAdditionalRequest.getName());
         checkIfAdditionIdExists(updateAdditionalRequest.getAdditionalId());
-        Additional additional = this.modelMapperService.forRequest().map(updateAdditionalRequest, Additional.class);
 
+        Additional additional = this.modelMapperService.forRequest().map(updateAdditionalRequest, Additional.class);
         this.additionalDao.save(additional);
+
         return new SuccessResult("Güncellendi");
     }
 
     @Override
     public Result delete(DeleteAdditionalRequest deleteAdditionalRequest) throws BusinessException {
         checkIfAdditionIdExists(deleteAdditionalRequest.getAdditionalId());
+
         Additional additional = this.modelMapperService.forRequest().map(deleteAdditionalRequest, Additional.class);
-        this.additionalDao.delete(additional);
+        this.additionalDao.deleteById(additional.getAdditionalId());
+
         return new SuccessResult("Silindi");
     }
 
@@ -90,16 +95,14 @@ public class AdditionalManager implements AdditionalService {
         }
     }
 
-    @Override
+  /*  @Override
     public double totalAdditionalFeeCalculator(List<Integer> additionalList) {
-        int listSize = additionalList.size();
         double total = 0;
-        for (int i = 0; i < listSize; i++) {
-
-            total += this.additionalDao.getById(additionalList.get(i)).getDailyPrice();
+        for (Integer integer : additionalList) {
+            total += this.additionalDao.getById(integer).getDailyPrice();
         }
         return total;
-    }
+    }*/
 
 
 }

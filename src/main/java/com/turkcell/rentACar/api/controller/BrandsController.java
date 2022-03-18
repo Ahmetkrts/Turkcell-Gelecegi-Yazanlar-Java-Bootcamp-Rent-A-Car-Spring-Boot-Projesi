@@ -1,11 +1,11 @@
 package com.turkcell.rentACar.api.controller;
 
 import com.turkcell.rentACar.business.abstracts.BrandService;
-import com.turkcell.rentACar.business.dtos.BrandGetDto;
-import com.turkcell.rentACar.business.dtos.BrandListDto;
-import com.turkcell.rentACar.business.request.CreateBrandRequest;
-import com.turkcell.rentACar.business.request.DeleteBrandRequest;
-import com.turkcell.rentACar.business.request.UpdateBrandRequest;
+import com.turkcell.rentACar.business.dtos.brand.BrandGetDto;
+import com.turkcell.rentACar.business.dtos.brand.BrandListDto;
+import com.turkcell.rentACar.business.request.brand.CreateBrandRequest;
+import com.turkcell.rentACar.business.request.brand.DeleteBrandRequest;
+import com.turkcell.rentACar.business.request.brand.UpdateBrandRequest;
 import com.turkcell.rentACar.core.exception.BusinessException;
 import com.turkcell.rentACar.core.result.DataResult;
 import com.turkcell.rentACar.core.result.Result;

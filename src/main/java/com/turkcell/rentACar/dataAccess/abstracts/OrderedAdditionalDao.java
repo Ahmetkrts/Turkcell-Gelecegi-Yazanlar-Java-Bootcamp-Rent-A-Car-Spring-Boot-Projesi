@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface OrderedAdditionalDao extends JpaRepository<OrderedAdditional, Integer> {
     List<OrderedAdditional> findAllByOrderedAdditionalId(int orderedAdditionalId);
+
+    List<OrderedAdditional> getByRentCarRentCarId(int rentCarId);
 }

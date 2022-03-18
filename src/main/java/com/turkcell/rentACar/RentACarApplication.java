@@ -15,7 +15,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
-
+/*
+* #Çalışmayan kısımlar
+* Customer silme işlemleri sıkıntılı silme gerçekleşmiyor
+*
+* */
 
 @SpringBootApplication
 @RestControllerAdvice
@@ -44,6 +48,31 @@ public class RentACarApplication {
 
     //-----------------
 
+    /*
+    IndividualCustomer(id,FirstName,LastName,NationalIdetny
+    CorporateCustomer(id,CompanyName,TaxNumber
+    müşteriler Aynı Zamanda kullanıcıdır,
+    User-> id,Email,Password
+
+    bireysele kiralama
+    kurumsala kiralama
+
+    tüm kiralama sonuncunda fatura kesilecek(Invoice,)
+    * Şirketimiz büyüdü. Kurumsal müşteriler araba kiralayabilmelidir.
+    *  (Kurumsal Müşteri – vergiNo, Şirket ismi,email…. Kiralama kuralları bireysel müşteri ile aynıdır.
+    *  14- Tüm kiralamalar sonucunda fatura kesilmelidir. (
+    Fatura No, Oluşturma Tarihi, Kiralama tarihleri
+    * , Toplam kiralama gün sayısı, kiralama tutarı,musteri) Belirli tarih aralığında tüm faturalar listelenebilmelidir.
+    *  Müşteriye ait faturalar listelenebilmelidi
+    * */
+
+    /*
+     * 16- arabalara güncel kilometre bilgisi eklenmelidir.
+     * kiralamalarda balangıç kilometresi girilmelidir.
+     * kiralama dönüşlerinde dönüş kilometresi bilgisi girilmesidir. Bu bilgi arabada da güncellenmelidir.
+     * 17- arabaya ait hasarlar girilebilimelidir.(id,CarId,Hasar bilgisi)
+     *
+     * */
 
 
     @ExceptionHandler
@@ -54,8 +83,8 @@ public class RentACarApplication {
         for (FieldError fieldError : argumentNotValidException.getBindingResult().getFieldErrors()) {
             handleValidation.put(fieldError.getField(), fieldError.getCode());
         }
-        ErrorDataResult<Object> error = new ErrorDataResult<Object>(handleValidation, "Validations Error");
-        return error;
+        return new ErrorDataResult<Object>(handleValidation, "Validations Error");
+
     }
 
     @ExceptionHandler
@@ -63,5 +92,10 @@ public class RentACarApplication {
     public ErrorDataResult<Object> handleBusinessErrors(BusinessException businessException) {
         return new ErrorDataResult<Object>(businessException.getMessage(), "Business Error");
     }
+
+    ///exception globale taşınacak
+
+
+
 
 }

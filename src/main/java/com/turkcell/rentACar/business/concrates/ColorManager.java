@@ -1,11 +1,11 @@
 package com.turkcell.rentACar.business.concrates;
 
 import com.turkcell.rentACar.business.abstracts.ColorService;
-import com.turkcell.rentACar.business.dtos.ColorGetDto;
-import com.turkcell.rentACar.business.dtos.ColorListDto;
-import com.turkcell.rentACar.business.request.CreateColorRequest;
-import com.turkcell.rentACar.business.request.DeleteColorRequest;
-import com.turkcell.rentACar.business.request.UpdateColorRequest;
+import com.turkcell.rentACar.business.dtos.color.ColorGetDto;
+import com.turkcell.rentACar.business.dtos.color.ColorListDto;
+import com.turkcell.rentACar.business.request.color.CreateColorRequest;
+import com.turkcell.rentACar.business.request.color.DeleteColorRequest;
+import com.turkcell.rentACar.business.request.color.UpdateColorRequest;
 import com.turkcell.rentACar.core.exception.BusinessException;
 import com.turkcell.rentACar.core.mapping.ModelMapperService;
 import com.turkcell.rentACar.core.result.DataResult;
@@ -34,7 +34,7 @@ public class ColorManager implements ColorService {
 
     @Override
     public Result add(CreateColorRequest createColorRequest) throws BusinessException {
-        checkIfName(createColorRequest.getName());
+        checkIfNameExists(createColorRequest.getName());
 
         Color color = this.modelMapperService.forRequest().map(createColorRequest, Color.class);
         this.colorDao.save(color);
@@ -55,7 +55,8 @@ public class ColorManager implements ColorService {
 
     @Override
     public DataResult<ColorGetDto> getById(int colorId) throws BusinessException {
-        checkIfColorId(colorId);
+        checkIfColorIdExists(colorId);
+
         Color response = this.colorDao.getById(colorId);
         ColorGetDto result = this.modelMapperService.forDto().map(response, ColorGetDto.class);
         return new SuccessDataResult<ColorGetDto>("Listelendi");
@@ -63,8 +64,9 @@ public class ColorManager implements ColorService {
 
     @Override
     public Result update(UpdateColorRequest updateColorRequest) throws BusinessException {
-        checkIfName(updateColorRequest.getName());
-        checkIfColorId(updateColorRequest.getColorId());
+        checkIfNameExists(updateColorRequest.getName());
+        checkIfColorIdExists(updateColorRequest.getColorId());
+
         Color color = this.modelMapperService.forRequest().map(updateColorRequest, Color.class);
         this.colorDao.save(color);
         return new SuccessResult("eklendi");
@@ -73,19 +75,20 @@ public class ColorManager implements ColorService {
 
     @Override
     public Result delete(DeleteColorRequest deleteColorRequest) throws BusinessException {
-        checkIfColorId(deleteColorRequest.getColorId());
+        checkIfColorIdExists(deleteColorRequest.getColorId());
+
         Color color = this.modelMapperService.forRequest().map(deleteColorRequest, Color.class);
-        this.colorDao.delete(color);
+        this.colorDao.deleteById(color.getColorId());
         return new SuccessResult("Veri Silindi");
     }
 
-    private void checkIfName(String name) throws BusinessException {
+    private void checkIfNameExists(String name) throws BusinessException {
         if (this.colorDao.existsByName(name)) {
             throw new BusinessException("İsimler Aynı Olamaz...");
         }
     }
 
-    private void checkIfColorId(int colorId) throws BusinessException {
+    public void checkIfColorIdExists(int colorId) throws BusinessException {
         if (!this.colorDao.existsById(colorId)) {
             throw new BusinessException(colorId + " No'lu Renk Bulunamadı");
         }

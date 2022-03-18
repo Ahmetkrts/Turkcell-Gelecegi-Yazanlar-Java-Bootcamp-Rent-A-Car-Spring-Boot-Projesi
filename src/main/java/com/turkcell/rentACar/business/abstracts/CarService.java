@@ -1,15 +1,14 @@
 package com.turkcell.rentACar.business.abstracts;
 
-import com.turkcell.rentACar.business.dtos.CarGetDto;
-import com.turkcell.rentACar.business.dtos.CarListDto;
-import com.turkcell.rentACar.business.request.CreateCarRequest;
-import com.turkcell.rentACar.business.request.DeleteCarRequest;
-import com.turkcell.rentACar.business.request.UpdateCarRequest;
+import com.turkcell.rentACar.business.dtos.car.CarGetDto;
+import com.turkcell.rentACar.business.dtos.car.CarListDto;
+import com.turkcell.rentACar.business.request.car.CreateCarRequest;
+import com.turkcell.rentACar.business.request.car.DeleteCarRequest;
+import com.turkcell.rentACar.business.request.car.UpdateCarRequest;
 import com.turkcell.rentACar.core.exception.BusinessException;
 import com.turkcell.rentACar.core.result.DataResult;
 import com.turkcell.rentACar.core.result.Result;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public interface CarService {
@@ -32,5 +31,9 @@ public interface CarService {
 
     void checkIfCarExist(int carId) throws BusinessException;
 
-    double totalCarDailyPriceCalculator(int carId, LocalDate dateOfIssue, LocalDate dateOfReceipt);
+    void isCarReturnedFromRent(int carId, double returnDistance) throws BusinessException;
+
+    //double totalCarDailyPriceCalculator(int carId, LocalDate dateOfIssue, LocalDate dateOfReceipt);
+
+
 }

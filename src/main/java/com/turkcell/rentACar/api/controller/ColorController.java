@@ -1,11 +1,11 @@
 package com.turkcell.rentACar.api.controller;
 
 import com.turkcell.rentACar.business.abstracts.ColorService;
-import com.turkcell.rentACar.business.dtos.ColorGetDto;
-import com.turkcell.rentACar.business.dtos.ColorListDto;
-import com.turkcell.rentACar.business.request.CreateColorRequest;
-import com.turkcell.rentACar.business.request.DeleteColorRequest;
-import com.turkcell.rentACar.business.request.UpdateColorRequest;
+import com.turkcell.rentACar.business.dtos.color.ColorGetDto;
+import com.turkcell.rentACar.business.dtos.color.ColorListDto;
+import com.turkcell.rentACar.business.request.color.CreateColorRequest;
+import com.turkcell.rentACar.business.request.color.DeleteColorRequest;
+import com.turkcell.rentACar.business.request.color.UpdateColorRequest;
 import com.turkcell.rentACar.core.exception.BusinessException;
 import com.turkcell.rentACar.core.result.DataResult;
 import com.turkcell.rentACar.core.result.Result;

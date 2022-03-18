@@ -1,11 +1,13 @@
 package com.turkcell.rentACar.business.concrates;
 
+import com.turkcell.rentACar.business.abstracts.BrandService;
 import com.turkcell.rentACar.business.abstracts.CarService;
-import com.turkcell.rentACar.business.dtos.CarGetDto;
-import com.turkcell.rentACar.business.dtos.CarListDto;
-import com.turkcell.rentACar.business.request.CreateCarRequest;
-import com.turkcell.rentACar.business.request.DeleteCarRequest;
-import com.turkcell.rentACar.business.request.UpdateCarRequest;
+import com.turkcell.rentACar.business.abstracts.ColorService;
+import com.turkcell.rentACar.business.dtos.car.CarGetDto;
+import com.turkcell.rentACar.business.dtos.car.CarListDto;
+import com.turkcell.rentACar.business.request.car.CreateCarRequest;
+import com.turkcell.rentACar.business.request.car.DeleteCarRequest;
+import com.turkcell.rentACar.business.request.car.UpdateCarRequest;
 import com.turkcell.rentACar.core.exception.BusinessException;
 import com.turkcell.rentACar.core.mapping.ModelMapperService;
 import com.turkcell.rentACar.core.result.DataResult;
@@ -15,13 +17,12 @@ import com.turkcell.rentACar.core.result.SuccessResult;
 import com.turkcell.rentACar.dataAccess.abstracts.CarDao;
 import com.turkcell.rentACar.entities.concrates.Car;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,20 +31,30 @@ public class CarManager implements CarService {
 
     private CarDao carDao;
     private ModelMapperService modelMapperService;
+    private BrandService brandService;
+    private ColorService colorService;
 
     @Autowired
-    public CarManager(CarDao carDao, ModelMapperService modelMapperService) {
+    public CarManager(CarDao carDao, ModelMapperService modelMapperService,
+                      @Lazy ColorService colorService,
+                      @Lazy BrandService brandService) {
         this.carDao = carDao;
         this.modelMapperService = modelMapperService;
+        this.colorService = colorService;
+        this.brandService = brandService;
     }
 
     @Override
     public Result add(CreateCarRequest createCarRequest) throws BusinessException {
+
+        this.brandService.checkIfBrandIdExists(createCarRequest.getBrandId());
+        this.colorService.checkIfColorIdExists(createCarRequest.getColorId());
+
         Car car = this.modelMapperService.forRequest().map(createCarRequest, Car.class);
         car.setCarId(0);
         this.carDao.save(car);
-        return new SuccessResult("Car Added");
 
+        return new SuccessResult("Car Added");
     }
 
     @Override
@@ -60,6 +71,7 @@ public class CarManager implements CarService {
     @Override
     public DataResult<CarGetDto> getById(int carId) throws BusinessException {
         checkIfCarExist(carId);
+
         Car car = this.carDao.getById(carId);
         CarGetDto response = this.modelMapperService.forRequest().map(car, CarGetDto.class);
         return new SuccessDataResult<CarGetDto>(response, "Id ye Göre Getirildi.");
@@ -68,6 +80,9 @@ public class CarManager implements CarService {
     @Override
     public Result update(UpdateCarRequest updateCarRequest) throws BusinessException {
         checkIfCarExist(updateCarRequest.getCarId());
+        this.brandService.checkIfBrandIdExists(updateCarRequest.getBrandId());
+        this.colorService.checkIfColorIdExists(updateCarRequest.getColorId());
+
         Car car = this.modelMapperService.forRequest().map(updateCarRequest, Car.class);
         this.carDao.save(car);
 
@@ -77,8 +92,9 @@ public class CarManager implements CarService {
     @Override
     public Result delete(DeleteCarRequest deleteCarRequest) throws BusinessException {
         checkIfCarExist(deleteCarRequest.getCarId());
+
         Car car = this.modelMapperService.forRequest().map(deleteCarRequest, Car.class);
-        this.carDao.delete(car);
+        this.carDao.deleteById(car.getCarId());
         return new SuccessResult("Araba Silindi");
     }
 
@@ -106,12 +122,9 @@ public class CarManager implements CarService {
 
     @Override
     public DataResult<List<CarListDto>> getAllSort(boolean sort) {
-        Sort.Direction sortDirection;
-        if (sort) {
-            sortDirection = Sort.Direction.ASC;
-        } else {
-            sortDirection = Sort.Direction.DESC;
-        }
+
+        Sort.Direction sortDirection = chooseSortDirection(sort);
+
         Sort sorted = Sort.by(sortDirection, "dailyPrice");
         List<Car> result = this.carDao.findAll(sorted);
         List<CarListDto> response = result
@@ -123,13 +136,35 @@ public class CarManager implements CarService {
 
     public void checkIfCarExist(int carId) throws BusinessException {
         if (!this.carDao.existsByCarId(carId)) {
-            throw new BusinessException("Araç Bulunamadı..");
+            throw new BusinessException(carId + " No'lu Araç Bulunamadı..");
+        }
+    }
+
+    private Sort.Direction chooseSortDirection(boolean sort) {
+        if (sort) {
+            return Sort.Direction.ASC;
+        } else {
+            return Sort.Direction.DESC;
         }
     }
 
     @Override
+    public void isCarReturnedFromRent(int carId, double returnDistance) throws BusinessException {
+        checkIfCarExist(carId);
+        Car car = this.carDao.getById(carId);
+        if (car.getDistance() < returnDistance) {
+            car.setDistance(returnDistance);
+            this.carDao.save(car);
+        } else {
+            throw new BusinessException("Girilen Dönüş Kilometresi değeri Aracın şuanki Kilometresinden Düşük ");
+        }
+    }
+
+   /* @Override
     public double totalCarDailyPriceCalculator(int carId, LocalDate dateOfIssue, LocalDate dateOfReceipt) {
         int daysBetweenTwoDates = (int) ChronoUnit.DAYS.between(dateOfIssue, dateOfReceipt);
         return this.carDao.getById(carId).getDailyPrice() * daysBetweenTwoDates;
-    }
+    }*/
+
+
 }

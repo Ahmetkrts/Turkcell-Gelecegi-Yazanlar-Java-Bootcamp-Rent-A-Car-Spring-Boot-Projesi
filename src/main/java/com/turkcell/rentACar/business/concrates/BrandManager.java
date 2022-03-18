@@ -1,11 +1,11 @@
 package com.turkcell.rentACar.business.concrates;
 
 import com.turkcell.rentACar.business.abstracts.BrandService;
-import com.turkcell.rentACar.business.dtos.BrandGetDto;
-import com.turkcell.rentACar.business.dtos.BrandListDto;
-import com.turkcell.rentACar.business.request.CreateBrandRequest;
-import com.turkcell.rentACar.business.request.DeleteBrandRequest;
-import com.turkcell.rentACar.business.request.UpdateBrandRequest;
+import com.turkcell.rentACar.business.dtos.brand.BrandGetDto;
+import com.turkcell.rentACar.business.dtos.brand.BrandListDto;
+import com.turkcell.rentACar.business.request.brand.CreateBrandRequest;
+import com.turkcell.rentACar.business.request.brand.DeleteBrandRequest;
+import com.turkcell.rentACar.business.request.brand.UpdateBrandRequest;
 import com.turkcell.rentACar.core.exception.BusinessException;
 import com.turkcell.rentACar.core.mapping.ModelMapperManager;
 import com.turkcell.rentACar.core.mapping.ModelMapperService;
@@ -35,10 +35,11 @@ public class BrandManager implements BrandService {
 
     @Override
     public Result add(CreateBrandRequest createBrandRequest) throws BusinessException {
-        checkIfName(createBrandRequest.getName());
+        checkIfNameExists(createBrandRequest.getName());
 
         Brand brand = this.modelMapperService.forRequest().map(createBrandRequest, Brand.class);
         this.brandDao.save(brand);
+
         return new SuccessResult("Eklendi");
 
     }
@@ -55,7 +56,8 @@ public class BrandManager implements BrandService {
 
     @Override
     public DataResult<BrandGetDto> getById(int brandId) throws BusinessException {
-        checkIfId(brandId);
+        checkIfBrandIdExists(brandId);
+
         Brand response = this.brandDao.getById(brandId);
         BrandGetDto result = this.modelMapperService.forDto().map(response, BrandGetDto.class);
         return new SuccessDataResult<BrandGetDto>(result, "Listelendi");
@@ -63,28 +65,31 @@ public class BrandManager implements BrandService {
 
     @Override
     public Result update(UpdateBrandRequest updateBrandRequest) throws BusinessException {
-        checkIfName(updateBrandRequest.getName());
-        checkIfId(updateBrandRequest.getBrandId());
+        checkIfNameExists(updateBrandRequest.getName());
+        checkIfBrandIdExists(updateBrandRequest.getBrandId());
+
         Brand brand = this.modelMapperService.forRequest().map(updateBrandRequest, Brand.class);
         this.brandDao.save(brand);
+
         return new SuccessResult("GÜncellendi");
     }
 
     @Override
     public Result delete(DeleteBrandRequest deleteBrandRequest) throws BusinessException {
-        checkIfId(deleteBrandRequest.getBrandId());
+        checkIfBrandIdExists(deleteBrandRequest.getBrandId());
+
         Brand brand = this.modelMapperService.forRequest().map(deleteBrandRequest, Brand.class);
-        this.brandDao.delete(brand);
+        this.brandDao.deleteById(brand.getBrandId());
         return new SuccessResult("Veri Silindi");
     }
 
-    private void checkIfName(String name) throws BusinessException {
+    private void checkIfNameExists(String name) throws BusinessException {
         if (this.brandDao.existsByName(name)) {
             throw new BusinessException("İsimler Aynı Olamaz...");
         }
     }
 
-    private void checkIfId(int brandId) throws BusinessException {
+    public void checkIfBrandIdExists(int brandId) throws BusinessException {
         if (!this.brandDao.existsById(brandId)) {
             throw new BusinessException(brandId + " No'lu Marka Bulunamadı");
         }

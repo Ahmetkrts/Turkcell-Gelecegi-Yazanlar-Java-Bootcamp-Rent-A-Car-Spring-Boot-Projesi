@@ -1,10 +1,10 @@
 package com.turkcell.rentACar.business.abstracts;
 
-import com.turkcell.rentACar.business.dtos.ColorGetDto;
-import com.turkcell.rentACar.business.dtos.ColorListDto;
-import com.turkcell.rentACar.business.request.CreateColorRequest;
-import com.turkcell.rentACar.business.request.DeleteColorRequest;
-import com.turkcell.rentACar.business.request.UpdateColorRequest;
+import com.turkcell.rentACar.business.dtos.color.ColorGetDto;
+import com.turkcell.rentACar.business.dtos.color.ColorListDto;
+import com.turkcell.rentACar.business.request.color.CreateColorRequest;
+import com.turkcell.rentACar.business.request.color.DeleteColorRequest;
+import com.turkcell.rentACar.business.request.color.UpdateColorRequest;
 import com.turkcell.rentACar.core.exception.BusinessException;
 import com.turkcell.rentACar.core.result.DataResult;
 import com.turkcell.rentACar.core.result.Result;
@@ -22,6 +22,8 @@ public interface ColorService {
     Result update(UpdateColorRequest updateColorRequest) throws BusinessException;
 
     Result delete(DeleteColorRequest deleteColorRequest) throws BusinessException;
+
+    void checkIfColorIdExists(int colorId) throws BusinessException;
 
 }
 //Brand update,delete,getById

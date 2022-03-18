@@ -1,11 +1,11 @@
 package com.turkcell.rentACar.api.controller;
 
 import com.turkcell.rentACar.business.abstracts.AdditionalService;
-import com.turkcell.rentACar.business.dtos.AdditionalGetDto;
-import com.turkcell.rentACar.business.dtos.AdditionalListDto;
-import com.turkcell.rentACar.business.request.CreateAdditionalRequest;
-import com.turkcell.rentACar.business.request.DeleteAdditionalRequest;
-import com.turkcell.rentACar.business.request.UpdateAdditionalRequest;
+import com.turkcell.rentACar.business.dtos.additional.AdditionalGetDto;
+import com.turkcell.rentACar.business.dtos.additional.AdditionalListDto;
+import com.turkcell.rentACar.business.request.additional.CreateAdditionalRequest;
+import com.turkcell.rentACar.business.request.additional.DeleteAdditionalRequest;
+import com.turkcell.rentACar.business.request.additional.UpdateAdditionalRequest;
 import com.turkcell.rentACar.core.exception.BusinessException;
 import com.turkcell.rentACar.core.result.DataResult;
 import com.turkcell.rentACar.core.result.Result;

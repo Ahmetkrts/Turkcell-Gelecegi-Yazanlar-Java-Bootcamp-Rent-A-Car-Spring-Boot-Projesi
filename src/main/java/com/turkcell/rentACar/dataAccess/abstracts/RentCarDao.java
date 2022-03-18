@@ -15,4 +15,9 @@ public interface RentCarDao extends JpaRepository<RentCar, Integer> {
 
     boolean existsByRentCarId(int rentCarId);
 
+    int getByCar_DailyPrice(int carId);
+
+
+
+
 }
