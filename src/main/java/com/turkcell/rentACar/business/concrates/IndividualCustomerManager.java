@@ -1,6 +1,7 @@
 package com.turkcell.rentACar.business.concrates;
 
 import com.turkcell.rentACar.business.abstracts.IndividualCustomerService;
+import com.turkcell.rentACar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentACar.business.dtos.individualCustomer.IndividualCustomerGetDto;
 import com.turkcell.rentACar.business.dtos.individualCustomer.IndividualCustomerListDto;
 import com.turkcell.rentACar.business.request.individualCustomer.CreateIndividualCustomerRequest;
@@ -35,7 +36,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
     public Result add(CreateIndividualCustomerRequest createIndividualCustomerRequest) throws BusinessException {
         IndividualCustomer individualCustomer = this.modelMapperService.forRequest().map(createIndividualCustomerRequest, IndividualCustomer.class);
         this.individualCustomerDao.save(individualCustomer);
-        return new SuccessResult("Eklendi");
+        return new SuccessResult(BusinessMessages.ADDED);
     }
 
     @Override
@@ -44,7 +45,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 
         IndividualCustomer individualCustomer = this.modelMapperService.forRequest().map(updateIndividualCustomerRequest, IndividualCustomer.class);
         this.individualCustomerDao.save(individualCustomer);
-        return new SuccessResult("Güncelledi");
+        return new SuccessResult(BusinessMessages.UPDATED);
     }
 
     @Override
@@ -53,7 +54,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 
         IndividualCustomer individualCustomer = this.modelMapperService.forRequest().map(deleteIndividualCustomerRequest, IndividualCustomer.class);
         this.individualCustomerDao.delete(individualCustomer);
-        return new SuccessResult("Silindi");
+        return new SuccessResult(BusinessMessages.DELETED);
     }
 
     @Override
@@ -65,7 +66,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
                 .map(individualCustomer -> this.modelMapperService.forDto().map(individualCustomer, IndividualCustomerListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccessDataResult<List<IndividualCustomerListDto>>(result, "Listelendi");
+        return new SuccessDataResult<List<IndividualCustomerListDto>>(result, BusinessMessages.LISTED);
     }
 
     @Override
@@ -74,12 +75,12 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 
         IndividualCustomer response = this.individualCustomerDao.getById(individualCustomerId);
         IndividualCustomerGetDto result = this.modelMapperService.forDto().map(response, IndividualCustomerGetDto.class);
-        return new SuccessDataResult<>(result, "Listelendi");
+        return new SuccessDataResult<>(result, individualCustomerId + BusinessMessages.INDIVIDUAL_LISTED);
     }
 
     public void checkIfIndividualCustomerIdExists(int IndividualCustomerId) throws BusinessException {
         if (!this.individualCustomerDao.existsById(IndividualCustomerId)) {
-            throw new BusinessException(IndividualCustomerId + " No'lu Normal Müşteri Bulunamadı..");
+            throw new BusinessException(IndividualCustomerId + BusinessMessages.INDIVIDUAL_NOT_FOUND);
         }
     }
 }

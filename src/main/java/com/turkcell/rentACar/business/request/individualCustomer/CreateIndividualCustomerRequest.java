@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 
 
 @Data
@@ -16,8 +15,6 @@ public class CreateIndividualCustomerRequest {
 
     @NotNull
     private String nationalIdentity;
-    @NotNull
-    private LocalDate customer_CreateDate;
     @NotNull
     private String firstName;
     @NotNull

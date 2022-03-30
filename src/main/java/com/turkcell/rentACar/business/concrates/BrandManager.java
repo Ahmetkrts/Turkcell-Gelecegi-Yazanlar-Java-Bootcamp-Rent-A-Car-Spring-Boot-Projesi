@@ -1,6 +1,7 @@
 package com.turkcell.rentACar.business.concrates;
 
 import com.turkcell.rentACar.business.abstracts.BrandService;
+import com.turkcell.rentACar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentACar.business.dtos.brand.BrandGetDto;
 import com.turkcell.rentACar.business.dtos.brand.BrandListDto;
 import com.turkcell.rentACar.business.request.brand.CreateBrandRequest;
@@ -40,7 +41,7 @@ public class BrandManager implements BrandService {
         Brand brand = this.modelMapperService.forRequest().map(createBrandRequest, Brand.class);
         this.brandDao.save(brand);
 
-        return new SuccessResult("Eklendi");
+        return new SuccessResult(BusinessMessages.ADDED);
 
     }
 
@@ -51,7 +52,7 @@ public class BrandManager implements BrandService {
                 .map(brand -> this.modelMapperService
                         .forDto().map(brand, BrandListDto.class))
                 .collect(Collectors.toList());
-        return new SuccessDataResult<List<BrandListDto>>(result, "Listelendi");
+        return new SuccessDataResult<List<BrandListDto>>(result, BusinessMessages.LISTED);
     }
 
     @Override
@@ -60,7 +61,7 @@ public class BrandManager implements BrandService {
 
         Brand response = this.brandDao.getById(brandId);
         BrandGetDto result = this.modelMapperService.forDto().map(response, BrandGetDto.class);
-        return new SuccessDataResult<BrandGetDto>(result, "Listelendi");
+        return new SuccessDataResult<BrandGetDto>(result, brandId + BusinessMessages.BRAND_LISTED);
     }
 
     @Override
@@ -71,7 +72,7 @@ public class BrandManager implements BrandService {
         Brand brand = this.modelMapperService.forRequest().map(updateBrandRequest, Brand.class);
         this.brandDao.save(brand);
 
-        return new SuccessResult("GÜncellendi");
+        return new SuccessResult(BusinessMessages.UPDATED);
     }
 
     @Override
@@ -80,18 +81,18 @@ public class BrandManager implements BrandService {
 
         Brand brand = this.modelMapperService.forRequest().map(deleteBrandRequest, Brand.class);
         this.brandDao.deleteById(brand.getBrandId());
-        return new SuccessResult("Veri Silindi");
+        return new SuccessResult(BusinessMessages.DELETED);
     }
 
     private void checkIfNameExists(String name) throws BusinessException {
         if (this.brandDao.existsByName(name)) {
-            throw new BusinessException("İsimler Aynı Olamaz...");
+            throw new BusinessException(BusinessMessages.SAME_NAME);
         }
     }
 
     public void checkIfBrandIdExists(int brandId) throws BusinessException {
         if (!this.brandDao.existsById(brandId)) {
-            throw new BusinessException(brandId + " No'lu Marka Bulunamadı");
+            throw new BusinessException(brandId + BusinessMessages.BRAND_NOT_FOUND);
         }
     }
 }

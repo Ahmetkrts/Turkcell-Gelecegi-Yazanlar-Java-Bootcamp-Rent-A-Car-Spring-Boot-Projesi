@@ -26,5 +26,5 @@ public interface AdditionalService {
 
     void checkIfAdditionIdExists(int addditionalId) throws BusinessException;
 
-    //double totalAdditionalFeeCalculator(List<Integer> additionalList);
+    double totalAdditionalFeeCalculator(List<Integer> additionalList);
 }

@@ -9,6 +9,7 @@ import com.turkcell.rentACar.core.exception.BusinessException;
 import com.turkcell.rentACar.core.result.DataResult;
 import com.turkcell.rentACar.core.result.Result;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface CarService {
@@ -31,9 +32,8 @@ public interface CarService {
 
     void checkIfCarExist(int carId) throws BusinessException;
 
-    void isCarReturnedFromRent(int carId, double returnDistance) throws BusinessException;
+    void isCarReturnFromRent(int carId, double returnDistance) throws BusinessException;
 
-    //double totalCarDailyPriceCalculator(int carId, LocalDate dateOfIssue, LocalDate dateOfReceipt);
-
+    double totalCarDailyPriceCalculator(int carId, LocalDate dateOfIssue, LocalDate dateOfReceipt);
 
 }

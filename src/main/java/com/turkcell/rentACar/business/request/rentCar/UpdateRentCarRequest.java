@@ -18,8 +18,6 @@ public class UpdateRentCarRequest {
     @NotNull
     private LocalDate dateOfIssue;
     private LocalDate dateOfReceipt;
-
-    private double returnDistance;
     @NotNull
     private int customer_UserId;
     @NotNull

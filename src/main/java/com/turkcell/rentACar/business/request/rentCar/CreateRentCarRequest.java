@@ -11,22 +11,16 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateRentCarForIndividualRequest {
+public class CreateRentCarRequest {
 
     @NotNull
     private LocalDate dateOfIssue;
-
+    @NotNull
     private LocalDate dateOfReceipt;
-
-
-    private double returnDistance;
-
     @NotNull
     private int customer_UserId;
-
     @NotNull
     private int carId;
-
     @NotNull
     private int fromCityId;
     @NotNull

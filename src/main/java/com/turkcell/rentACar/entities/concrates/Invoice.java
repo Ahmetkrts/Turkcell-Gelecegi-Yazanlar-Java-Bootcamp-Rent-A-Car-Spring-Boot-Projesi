@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
@@ -30,9 +31,12 @@ public class Invoice {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "rent_car_id")
     private RentCar rentCar;
+
+    @OneToMany(mappedBy = "invoice")
+    private List<Payment> payments;
 
 
 }

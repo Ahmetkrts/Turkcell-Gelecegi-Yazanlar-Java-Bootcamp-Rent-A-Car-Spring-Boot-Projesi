@@ -1,6 +1,6 @@
 package com.turkcell.rentACar.business.request.rentCar;
 
-
+import com.turkcell.rentACar.business.request.creditCard.CreateCreditCardForPaymentRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,26 +11,14 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateRentCarForCorporateRequest {
-
-    @NotNull
-    private LocalDate dateOfIssue;
-
-    private LocalDate dateOfReceipt;
-
-
-    private double returnDistance;
-
-    @NotNull
-    private int customer_UserId;
+public class UpdateReturnCarRequest {
 
     @NotNull
     private int carId;
-
     @NotNull
-    private int fromCityId;
+    private LocalDate carReturnDate;
     @NotNull
-    private int toCityId;
-
+    private double returnDistance;
+    private CreateCreditCardForPaymentRequest createCreditCardForPaymentRequest;
 
 }

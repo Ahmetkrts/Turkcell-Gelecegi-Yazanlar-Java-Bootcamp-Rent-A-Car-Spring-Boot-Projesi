@@ -16,6 +16,7 @@ public class RentCarListDto {
     private int rentCarId;
     private LocalDate dateOfIssue;
     private LocalDate dateOfReceipt;
+    private LocalDate carReturnDate;
     private double startDistance;
     private double returnDistance;
     private String brandName;

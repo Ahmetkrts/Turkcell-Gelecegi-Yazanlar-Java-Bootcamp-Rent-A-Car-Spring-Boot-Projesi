@@ -3,10 +3,10 @@ package com.turkcell.rentACar.api.controller;
 import com.turkcell.rentACar.business.abstracts.RentCarService;
 import com.turkcell.rentACar.business.dtos.rentCar.RentCarGetDto;
 import com.turkcell.rentACar.business.dtos.rentCar.RentCarListDto;
-import com.turkcell.rentACar.business.request.rentCar.CreateRentCarForCorporateRequest;
-import com.turkcell.rentACar.business.request.rentCar.CreateRentCarForIndividualRequest;
+import com.turkcell.rentACar.business.request.rentCar.CreateRentCarRequest;
 import com.turkcell.rentACar.business.request.rentCar.DeleteRentCarRequest;
 import com.turkcell.rentACar.business.request.rentCar.UpdateRentCarRequest;
+import com.turkcell.rentACar.business.request.rentCar.UpdateReturnCarRequest;
 import com.turkcell.rentACar.core.exception.BusinessException;
 import com.turkcell.rentACar.core.result.DataResult;
 import com.turkcell.rentACar.core.result.Result;
@@ -28,13 +28,19 @@ public class RentCarController {
         this.rentCarService = rentCarService;
     }
 
+
+    @PutMapping("/updateForReturnCar")
+    Result updateForReturnCar(@RequestBody @Valid UpdateReturnCarRequest updateReturnCarRequest) throws BusinessException {
+        return this.rentCarService.updateForReturnCar(updateReturnCarRequest);
+    }
+
     @PostMapping("/addForIndividual")
-    Result addForIndividual(@RequestBody @Valid CreateRentCarForIndividualRequest createRentCarForIndividualRequest) throws BusinessException {
-        return this.rentCarService.addForIndividual(createRentCarForIndividualRequest);
+    Result addForIndividual(@RequestBody @Valid CreateRentCarRequest createRentCarRequest) throws BusinessException {
+        return this.rentCarService.addForIndividual(createRentCarRequest);
     }
 
     @PostMapping("/addForCorporate")
-    Result addForCorporate(@RequestBody @Valid CreateRentCarForCorporateRequest createRentCarForCorporateRequest) throws BusinessException {
+    Result addForCorporate(@RequestBody @Valid CreateRentCarRequest createRentCarForCorporateRequest) throws BusinessException {
         return this.rentCarService.addForCorporate(createRentCarForCorporateRequest);
     }
 

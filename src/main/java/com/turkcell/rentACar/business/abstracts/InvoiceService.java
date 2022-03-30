@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface InvoiceService {
 
-    Result add(CreateInvoiceRequest createInvoiceRequest) throws BusinessException;
+    DataResult<Integer> add(CreateInvoiceRequest createInvoiceRequest) throws BusinessException;
 
     Result update(UpdateInvoiceRequest updateInvoiceRequest) throws BusinessException;
 
@@ -28,5 +28,5 @@ public interface InvoiceService {
 
     DataResult<List<InvoiceListDto>> getByBetweenStartingAndEndingDates(LocalDate startingDate, LocalDate endingDate) throws BusinessException;
 
-
+    void checkIfInvoiceIdExists(int invoiceId) throws BusinessException;
 }

@@ -27,6 +27,9 @@ public class RentCar {
     @Column(name = "date_of_receipt")
     private LocalDate dateOfReceipt;
 
+    @Column(name = "car_return_date")
+    private LocalDate carReturnDate;
+
     @Column(name = "start_distance")
     private double startDistance;
 
@@ -37,15 +40,9 @@ public class RentCar {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @OneToOne(mappedBy = "rentCar")
-    private Invoice invoice;
-
     @ManyToOne
     @JoinColumn(name = "car_id")
     private Car car;
-
-    @OneToMany(mappedBy = "rentCar")
-    private List<OrderedAdditional> orderedAdditionals;
 
     @ManyToOne
     @JoinColumn(name = "from_city_id")
@@ -54,6 +51,13 @@ public class RentCar {
     @ManyToOne
     @JoinColumn(name = "to_city_id")
     private City toCity;
+
+
+    @OneToMany(mappedBy = "rentCar")
+    private List<Invoice> invoices;
+
+    @OneToMany(mappedBy = "rentCar")
+    private List<OrderedAdditional> orderedAdditionals;
 
 
 }

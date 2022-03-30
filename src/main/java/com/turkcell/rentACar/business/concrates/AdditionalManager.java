@@ -1,6 +1,7 @@
 package com.turkcell.rentACar.business.concrates;
 
 import com.turkcell.rentACar.business.abstracts.AdditionalService;
+import com.turkcell.rentACar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentACar.business.dtos.additional.AdditionalGetDto;
 import com.turkcell.rentACar.business.dtos.additional.AdditionalListDto;
 import com.turkcell.rentACar.business.request.additional.CreateAdditionalRequest;
@@ -38,7 +39,7 @@ public class AdditionalManager implements AdditionalService {
         Additional response = this.modelMapperService.forRequest().map(createAdditionalRequest, Additional.class);
         this.additionalDao.save(response);
 
-        return new SuccessResult("Eklendi");
+        return new SuccessResult(BusinessMessages.ADDED);
     }
 
     @Override
@@ -49,7 +50,7 @@ public class AdditionalManager implements AdditionalService {
         Additional additional = this.modelMapperService.forRequest().map(updateAdditionalRequest, Additional.class);
         this.additionalDao.save(additional);
 
-        return new SuccessResult("Güncellendi");
+        return new SuccessResult(BusinessMessages.UPDATED);
     }
 
     @Override
@@ -59,7 +60,7 @@ public class AdditionalManager implements AdditionalService {
         Additional additional = this.modelMapperService.forRequest().map(deleteAdditionalRequest, Additional.class);
         this.additionalDao.deleteById(additional.getAdditionalId());
 
-        return new SuccessResult("Silindi");
+        return new SuccessResult(BusinessMessages.DELETED);
     }
 
     @Override
@@ -69,7 +70,7 @@ public class AdditionalManager implements AdditionalService {
                 .stream()
                 .map(additional -> this.modelMapperService.forDto().map(additional, AdditionalListDto.class))
                 .collect(Collectors.toList());
-        return new SuccessDataResult<>(result, "Listelendi");
+        return new SuccessDataResult<>(result, BusinessMessages.LISTED);
     }
 
     @Override
@@ -78,31 +79,31 @@ public class AdditionalManager implements AdditionalService {
         Additional response = this.additionalDao.getById(additionalId);
         AdditionalGetDto result = this.modelMapperService.forDto().map(response, AdditionalGetDto.class);
 
-        return new SuccessDataResult<>(result, additionalId + " No'lu Ek Hizmet Listelendi");
+        return new SuccessDataResult<>(result, additionalId + BusinessMessages.ADDITIONAL_LISTED);
     }
 
 
     private void checkIfNameExists(String name) throws BusinessException {
         if (this.additionalDao.existsByName(name)) {
-            throw new BusinessException("İsim Aynı Olamaz");
+            throw new BusinessException(BusinessMessages.SAME_NAME);
         }
     }
 
     @Override
     public void checkIfAdditionIdExists(int additionalId) throws BusinessException {
         if (!this.additionalDao.existsByAdditionalId(additionalId)) {
-            throw new BusinessException(additionalId + " No'lu Ek Hizmet Bulunamadı");
+            throw new BusinessException(additionalId + BusinessMessages.ADDITIONAL_NOT_FOUND);
         }
     }
 
-  /*  @Override
+    @Override
     public double totalAdditionalFeeCalculator(List<Integer> additionalList) {
         double total = 0;
         for (Integer integer : additionalList) {
             total += this.additionalDao.getById(integer).getDailyPrice();
         }
         return total;
-    }*/
+    }
 
 
 }

@@ -3,6 +3,7 @@ package com.turkcell.rentACar.entities.concrates;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,6 +20,7 @@ import java.util.List;
 public class Customer extends User {
 
     @Column(name = "registered_date")
+    @CreationTimestamp
     private LocalDate registeredDate;
 
     @OneToMany(mappedBy = "customer")
@@ -27,5 +29,7 @@ public class Customer extends User {
     @OneToMany(mappedBy = "customer")
     private List<Invoice> invoices;
 
+    @OneToMany(mappedBy = "customer")
+    private List<CreditCard> creditCards;
 
 }

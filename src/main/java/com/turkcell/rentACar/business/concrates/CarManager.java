@@ -3,6 +3,7 @@ package com.turkcell.rentACar.business.concrates;
 import com.turkcell.rentACar.business.abstracts.BrandService;
 import com.turkcell.rentACar.business.abstracts.CarService;
 import com.turkcell.rentACar.business.abstracts.ColorService;
+import com.turkcell.rentACar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentACar.business.dtos.car.CarGetDto;
 import com.turkcell.rentACar.business.dtos.car.CarListDto;
 import com.turkcell.rentACar.business.request.car.CreateCarRequest;
@@ -23,6 +24,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,7 +57,7 @@ public class CarManager implements CarService {
         car.setCarId(0);
         this.carDao.save(car);
 
-        return new SuccessResult("Car Added");
+        return new SuccessResult(BusinessMessages.ADDED);
     }
 
     @Override
@@ -64,7 +67,7 @@ public class CarManager implements CarService {
                 .stream()
                 .map(car -> this.modelMapperService.forDto().map(car, CarListDto.class))
                 .collect(Collectors.toList());
-        return new SuccessDataResult<List<CarListDto>>(response, "Listelendi");
+        return new SuccessDataResult<List<CarListDto>>(response, BusinessMessages.LISTED);
 
     }
 
@@ -74,7 +77,7 @@ public class CarManager implements CarService {
 
         Car car = this.carDao.getById(carId);
         CarGetDto response = this.modelMapperService.forRequest().map(car, CarGetDto.class);
-        return new SuccessDataResult<CarGetDto>(response, "Id ye Göre Getirildi.");
+        return new SuccessDataResult<CarGetDto>(response, carId + BusinessMessages.CAR_LISTED);
     }
 
     @Override
@@ -86,7 +89,7 @@ public class CarManager implements CarService {
         Car car = this.modelMapperService.forRequest().map(updateCarRequest, Car.class);
         this.carDao.save(car);
 
-        return new SuccessResult("Araba Güncellendi");
+        return new SuccessResult(BusinessMessages.UPDATED);
     }
 
     @Override
@@ -95,7 +98,7 @@ public class CarManager implements CarService {
 
         Car car = this.modelMapperService.forRequest().map(deleteCarRequest, Car.class);
         this.carDao.deleteById(car.getCarId());
-        return new SuccessResult("Araba Silindi");
+        return new SuccessResult(BusinessMessages.DELETED);
     }
 
     @Override
@@ -105,7 +108,7 @@ public class CarManager implements CarService {
                 .stream()
                 .map(car -> this.modelMapperService.forDto().map(car, CarListDto.class))
                 .collect(Collectors.toList());
-        return new SuccessDataResult<List<CarListDto>>(response, "Listelendi");
+        return new SuccessDataResult<List<CarListDto>>(response, dailyPrice + BusinessMessages.CAR_DAILY_PRICE_LESS_THAN_EQUAL_LISTED);
     }
 
     @Override
@@ -117,7 +120,7 @@ public class CarManager implements CarService {
                 .stream()
                 .map(car -> this.modelMapperService.forDto().map(car, CarListDto.class))
                 .collect(Collectors.toList());
-        return new SuccessDataResult<List<CarListDto>>(response, "Listelendi");
+        return new SuccessDataResult<List<CarListDto>>(response, BusinessMessages.LISTED);
     }
 
     @Override
@@ -131,12 +134,12 @@ public class CarManager implements CarService {
                 .stream()
                 .map(car -> this.modelMapperService.forDto().map(car, CarListDto.class))
                 .collect(Collectors.toList());
-        return new SuccessDataResult<List<CarListDto>>(response, "Listelendi");
+        return new SuccessDataResult<List<CarListDto>>(response, BusinessMessages.LISTED);
     }
 
     public void checkIfCarExist(int carId) throws BusinessException {
-        if (!this.carDao.existsByCarId(carId)) {
-            throw new BusinessException(carId + " No'lu Araç Bulunamadı..");
+        if (!this.carDao.existsById(carId)) {
+            throw new BusinessException(carId + BusinessMessages.CAR_NOT_FOUND);
         }
     }
 
@@ -149,22 +152,22 @@ public class CarManager implements CarService {
     }
 
     @Override
-    public void isCarReturnedFromRent(int carId, double returnDistance) throws BusinessException {
+    public void isCarReturnFromRent(int carId, double returnDistance) throws BusinessException {
         checkIfCarExist(carId);
         Car car = this.carDao.getById(carId);
         if (car.getDistance() < returnDistance) {
             car.setDistance(returnDistance);
             this.carDao.save(car);
         } else {
-            throw new BusinessException("Girilen Dönüş Kilometresi değeri Aracın şuanki Kilometresinden Düşük ");
+            throw new BusinessException(BusinessMessages.CAR_RETURN_DISTANCE_ERROR);
         }
     }
 
-   /* @Override
+    @Override
     public double totalCarDailyPriceCalculator(int carId, LocalDate dateOfIssue, LocalDate dateOfReceipt) {
         int daysBetweenTwoDates = (int) ChronoUnit.DAYS.between(dateOfIssue, dateOfReceipt);
         return this.carDao.getById(carId).getDailyPrice() * daysBetweenTwoDates;
-    }*/
+    }
 
 
 }

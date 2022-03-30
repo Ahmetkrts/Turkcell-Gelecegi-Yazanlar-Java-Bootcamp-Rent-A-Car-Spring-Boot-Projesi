@@ -16,10 +16,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 /*
-* #Çalışmayan kısımlar
-* Customer silme işlemleri sıkıntılı silme gerçekleşmiyor
-*
-* */
+ *
+ *  #Çalışmayan kısımlar
+ * Customer silme işlemleri sıkıntılı silme gerçekleşmiyor
+ * Customerler için password ve email için regex kontrolünü ekle
+ *
+ *
+ * Card kaydetme olayını ayarla (bu olayı front end'ciye bıraktım)
+ * */
 
 @SpringBootApplication
 @RestControllerAdvice
@@ -61,18 +65,31 @@ public class RentACarApplication {
     * Şirketimiz büyüdü. Kurumsal müşteriler araba kiralayabilmelidir.
     *  (Kurumsal Müşteri – vergiNo, Şirket ismi,email…. Kiralama kuralları bireysel müşteri ile aynıdır.
     *  14- Tüm kiralamalar sonucunda fatura kesilmelidir. (
-    Fatura No, Oluşturma Tarihi, Kiralama tarihleri
-    * , Toplam kiralama gün sayısı, kiralama tutarı,musteri) Belirli tarih aralığında tüm faturalar listelenebilmelidir.
+       Fatura No, Oluşturma Tarihi, Kiralama tarihleri,
+       Toplam kiralama gün sayısı, kiralama tutarı,musteri) Belirli tarih aralığında tüm faturalar listelenebilmelidir.
     *  Müşteriye ait faturalar listelenebilmelidi
     * */
 
     /*
      * 16- arabalara güncel kilometre bilgisi eklenmelidir.
-     * kiralamalarda balangıç kilometresi girilmelidir.
+     * kiralamalarda başlangıç kilometresi girilmelidir.
      * kiralama dönüşlerinde dönüş kilometresi bilgisi girilmesidir. Bu bilgi arabada da güncellenmelidir.
      * 17- arabaya ait hasarlar girilebilimelidir.(id,CarId,Hasar bilgisi)
-     *
      * */
+
+    /*
+    *
+    18- Pos Servisi ekleyiniz. Servis olumsuz döndüğünde kiralama gerçekleşmemelidir.
+    *  post(para alma işlemi) Rental AddiService Invoice Payments Yapılan ödemeleri bir tabloda tutunuz Bir ödeme en fazla bir kere alınmalıdır
+    * bir kiralamanın birden fazla invoicesi olabilir müşterilerin bazıların müşteriyi geciktiriyor o yüzden ekstra bir
+    *  günlük tutar alınıyor o yüzden
+    * 19- Magic stringlerden kurtulunuz.
+    *
+    * ---------------------------------------------------------------------------------------------
+    *20- Müşteriler kart bilgilerini kaydetmek isterse kart bilgileri ayrı bir tabloda tutulmalıdır.
+    *21- Müşteriler arabayı belirtilenden geç teslim ederse kiralama günü kadar yeni ödeme alınır.
+    *    Fark tutarı kadar yeni fatura kesilir. Bu kurallar ek hizmetler için de geçerlidi.
+    * */
 
 
     @ExceptionHandler
@@ -94,8 +111,6 @@ public class RentACarApplication {
     }
 
     ///exception globale taşınacak
-
-
 
 
 }

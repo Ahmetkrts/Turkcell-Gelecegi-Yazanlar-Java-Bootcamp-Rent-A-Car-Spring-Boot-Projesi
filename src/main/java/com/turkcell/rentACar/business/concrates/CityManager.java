@@ -1,6 +1,7 @@
 package com.turkcell.rentACar.business.concrates;
 
 import com.turkcell.rentACar.business.abstracts.CityService;
+import com.turkcell.rentACar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentACar.business.dtos.city.CityGetDto;
 import com.turkcell.rentACar.business.dtos.city.CityListDto;
 import com.turkcell.rentACar.business.request.city.CreateCityRequest;
@@ -38,7 +39,7 @@ public class CityManager implements CityService {
 
         City city = this.modelMapperService.forRequest().map(createCityRequest, City.class);
         this.cityDao.save(city);
-        return new SuccessResult("eklendi");
+        return new SuccessResult(BusinessMessages.ADDED);
 
     }
 
@@ -49,7 +50,7 @@ public class CityManager implements CityService {
                 .stream()
                 .map(city -> this.modelMapperService.forDto().map(city, CityListDto.class))
                 .collect(Collectors.toList());
-        return new SuccessDataResult<List<CityListDto>>(result, "Listelendi");
+        return new SuccessDataResult<List<CityListDto>>(result, BusinessMessages.LISTED);
 
     }
 
@@ -60,7 +61,7 @@ public class CityManager implements CityService {
         City response = this.cityDao.getById(cityId);
         CityGetDto result = this.modelMapperService.forDto().map(response, CityGetDto.class);
 
-        return new SuccessDataResult<CityGetDto>("Listelendi");
+        return new SuccessDataResult<CityGetDto>(cityId + BusinessMessages.CITY_LISTED);
     }
 
     @Override
@@ -70,7 +71,7 @@ public class CityManager implements CityService {
 
         City city = this.modelMapperService.forRequest().map(updateCityRequest, City.class);
         this.cityDao.save(city);
-        return new SuccessResult("eklendi");
+        return new SuccessResult(BusinessMessages.UPDATED);
 
     }
 
@@ -80,18 +81,18 @@ public class CityManager implements CityService {
 
         City city = this.modelMapperService.forRequest().map(deleteCityRequest, City.class);
         this.cityDao.deleteById(city.getId());
-        return new SuccessResult("Silindi");
+        return new SuccessResult(BusinessMessages.DELETED);
     }
 
     private void checkIfNameExists(String name) throws BusinessException {
         if (this.cityDao.existsByName(name)) {
-            throw new BusinessException("İsimler Aynı Olamaz...");
+            throw new BusinessException(BusinessMessages.SAME_NAME);
         }
     }
 
     public void checkIfCityIdExists(int cityId) throws BusinessException {
         if (!this.cityDao.existsById(cityId)) {
-            throw new BusinessException(cityId + " No'lu Şehir Bulunamadı");
+            throw new BusinessException(cityId + BusinessMessages.CITY_NOT_FOUND);
         }
     }
 }

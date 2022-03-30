@@ -3,6 +3,7 @@ package com.turkcell.rentACar.business.concrates;
 import com.turkcell.rentACar.business.abstracts.CarMaintenanceService;
 import com.turkcell.rentACar.business.abstracts.CarService;
 import com.turkcell.rentACar.business.abstracts.RentCarService;
+import com.turkcell.rentACar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentACar.business.dtos.carMaintenance.CarMaintenanceGetDto;
 import com.turkcell.rentACar.business.dtos.carMaintenance.CarMaintenanceListDto;
 import com.turkcell.rentACar.business.request.carMaintenance.CreateCarMaintenanceRequest;
@@ -56,7 +57,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
         carMaintenance.setCarMaintanenceId(0);
         this.carMaintenanceDao.save(carMaintenance);
 
-        return new SuccessResult("Bakım eklendi..");
+        return new SuccessResult(BusinessMessages.ADDED);
     }
 
     @Override
@@ -71,7 +72,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
                 .map(updateCarMaintenanceRequest, CarMaintenance.class);
         this.carMaintenanceDao.save(carMaintenance);
 
-        return new SuccessResult("Bakım Güncellendi..");
+        return new SuccessResult(BusinessMessages.UPDATED);
 
     }
 
@@ -80,7 +81,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
         checkIfCarMaintenanceIdExists(deleteCarMaintenanceRequest.getIdcarMaintanenceId());
         this.carMaintenanceDao.deleteById(deleteCarMaintenanceRequest.getIdcarMaintanenceId());
 
-        return new SuccessResult("Bakım Silindi..");
+        return new SuccessResult(BusinessMessages.DELETED);
     }
 
     @Override
@@ -89,7 +90,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 
         CarMaintenance result = this.carMaintenanceDao.getById(carMaintenanceId);
         CarMaintenanceGetDto response = this.modelMapperService.forDto().map(result, CarMaintenanceGetDto.class);
-        return new SuccessDataResult<CarMaintenanceGetDto>(response, "Listelendi");
+        return new SuccessDataResult<CarMaintenanceGetDto>(response, carMaintenanceId + BusinessMessages.CAR_MAINTENANCE_LISTED);
     }
 
     @Override
@@ -100,7 +101,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
         List<CarMaintenanceListDto> response = result.stream()
                 .map(carMaintenance -> this.modelMapperService.forDto().map(carMaintenance, CarMaintenanceListDto.class))
                 .collect(Collectors.toList());
-        return new SuccessDataResult<>(response, "Listelendi");
+        return new SuccessDataResult<>(response, carId + BusinessMessages.CAR_MAINTENANCE_BY_CAR_ID_LISTED);
     }
 
     @Override
@@ -110,20 +111,20 @@ public class CarMaintenanceManager implements CarMaintenanceService {
                 .map(carMaintenance -> this.modelMapperService.forDto().map(carMaintenance, CarMaintenanceListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccessDataResult<>(response, "Listelendi");
+        return new SuccessDataResult<>(response, BusinessMessages.LISTED);
 
     }
 
     public void checkIfCarMaintenanceReturnDateByCarId(int carId) throws BusinessException {
         if (this.carMaintenanceDao.getCarMaintenanceByCarCarIdAndReturnDateIsNull(carId) != null) {
-            throw new BusinessException("Araç Şuanda Bakımda..");
+            throw new BusinessException(carId + BusinessMessages.CAR_IS_IN_MAINTENANCE_NOW_BY_CAR_ID);
         }
 
     }
 
     private void checkIfCarMaintenanceIdExists(int carMaintenanceId) throws BusinessException {
         if (!this.carMaintenanceDao.existsById(carMaintenanceId)) {
-            throw new BusinessException(carMaintenanceId + " No'lu Araç Bakımı Bulunamadı..");
+            throw new BusinessException(carMaintenanceId + BusinessMessages.CAR_MAINTENANCE_NOT_FOUND);
         }
     }
 

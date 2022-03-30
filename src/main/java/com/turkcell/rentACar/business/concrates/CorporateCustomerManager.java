@@ -1,6 +1,7 @@
 package com.turkcell.rentACar.business.concrates;
 
 import com.turkcell.rentACar.business.abstracts.CorporateCustomerService;
+import com.turkcell.rentACar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentACar.business.dtos.corporateCustomer.CorporateCustomerGetDto;
 import com.turkcell.rentACar.business.dtos.corporateCustomer.CorporateCustomerListDto;
 import com.turkcell.rentACar.business.request.corporateCustomer.CreateCorporateCustomerRequest;
@@ -35,7 +36,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
     public Result add(CreateCorporateCustomerRequest createCorporateCustomerRequest) throws BusinessException {
         CorporateCustomer corporateCustomer = this.modelMapperService.forRequest().map(createCorporateCustomerRequest, CorporateCustomer.class);
         this.corporateCustomerDao.save(corporateCustomer);
-        return new SuccessResult("Eklendi");
+        return new SuccessResult(BusinessMessages.ADDED);
     }
 
     @Override
@@ -45,7 +46,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
         CorporateCustomer corporateCustomer = this.modelMapperService.forRequest().map(updateCorporateCustomerRequest, CorporateCustomer.class);
 
         this.corporateCustomerDao.save(corporateCustomer);
-        return new SuccessResult("Güncelledi");
+        return new SuccessResult(BusinessMessages.UPDATED);
     }
 
     @Override
@@ -54,7 +55,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 
         CorporateCustomer corporateCustomer = this.modelMapperService.forRequest().map(deleteCorporateCustomerRequest, CorporateCustomer.class);
         this.corporateCustomerDao.delete(corporateCustomer);
-        return new SuccessResult("Silindi");
+        return new SuccessResult(BusinessMessages.DELETED);
     }
 
     @Override
@@ -66,7 +67,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
                 .map(corporateCustomer -> this.modelMapperService.forDto().map(corporateCustomer, CorporateCustomerListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccessDataResult<List<CorporateCustomerListDto>>(result, "Listelendi");
+        return new SuccessDataResult<List<CorporateCustomerListDto>>(result, BusinessMessages.LISTED);
     }
 
     @Override
@@ -75,12 +76,12 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 
         CorporateCustomer response = this.corporateCustomerDao.getById(corporateCustomerId);
         CorporateCustomerGetDto result = this.modelMapperService.forDto().map(response, CorporateCustomerGetDto.class);
-        return new SuccessDataResult<>(result, "Listelendi");
+        return new SuccessDataResult<>(result, corporateCustomerId + BusinessMessages.CORPORATE_LISTED);
     }
 
     public void checkIfCorporateCustomerIdExists(int CorporateCustomerId) throws BusinessException {
         if (!this.corporateCustomerDao.existsById(CorporateCustomerId)) {
-            throw new BusinessException(CorporateCustomerId + " No'lu Şirket Müşterisi Bulunamadı..");
+            throw new BusinessException(CorporateCustomerId + BusinessMessages.CORPORATE_NOT_FOUND);
         }
     }
 }

@@ -2,6 +2,7 @@ package com.turkcell.rentACar.business.concrates;
 
 import com.turkcell.rentACar.business.abstracts.CarDamageService;
 import com.turkcell.rentACar.business.abstracts.CarService;
+import com.turkcell.rentACar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentACar.business.dtos.carDamage.CarDamageGetDto;
 import com.turkcell.rentACar.business.dtos.carDamage.CarDamageListDto;
 import com.turkcell.rentACar.business.request.carDamage.CreateCarDamageRequest;
@@ -46,7 +47,7 @@ public class CarDamageManager implements CarDamageService {
         cardamage.setCarDamageId(0);
         this.carDamageDao.save(cardamage);
 
-        return new SuccessResult("Eklendi");
+        return new SuccessResult(BusinessMessages.ADDED);
     }
 
     @Override
@@ -57,7 +58,7 @@ public class CarDamageManager implements CarDamageService {
         CarDamage cardamage = this.modelMapperService.forRequest().map(updateCarDamageRequest, CarDamage.class);
         this.carDamageDao.save(cardamage);
 
-        return new SuccessResult("Güncellendi");
+        return new SuccessResult(BusinessMessages.UPDATED);
     }
 
     @Override
@@ -67,7 +68,7 @@ public class CarDamageManager implements CarDamageService {
         CarDamage cardamage = this.modelMapperService.forRequest().map(deleteCarDamageRequest, CarDamage.class);
         this.carDamageDao.deleteById(cardamage.getCarDamageId());
 
-        return new SuccessResult("Silindi");
+        return new SuccessResult(BusinessMessages.DELETED);
     }
 
     @Override
@@ -79,7 +80,7 @@ public class CarDamageManager implements CarDamageService {
                 .map(carDamage -> this.modelMapperService.forDto().map(carDamage, CarDamageListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccessDataResult<>(result, "Listelendi");
+        return new SuccessDataResult<>(result, BusinessMessages.LISTED);
     }
 
     @Override
@@ -89,7 +90,7 @@ public class CarDamageManager implements CarDamageService {
         CarDamage response = this.carDamageDao.getById(carDamageId);
         CarDamageGetDto result = this.modelMapperService.forDto().map(response, CarDamageGetDto.class);
 
-        return new SuccessDataResult<>(result, "Listelendi");
+        return new SuccessDataResult<>(result, carDamageId + BusinessMessages.CAR_DAMAGE_LISTED);
     }
 
     @Override
@@ -102,12 +103,12 @@ public class CarDamageManager implements CarDamageService {
                 .map(carDamage -> this.modelMapperService.forDto().map(carDamage, CarDamageListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccessDataResult<>(result, "Listelendi");
+        return new SuccessDataResult<>(result, carId + BusinessMessages.CAR_DAMAGE_BY_CAR_ID_LISTED);
     }
 
     private void checkIfCarDamageIdExist(int carId) throws BusinessException {
         if (!this.carDamageDao.existsById(carId)) {
-            throw new BusinessException(carId + " No'lu Araç Hasarı Bulunamadı..");
+            throw new BusinessException(carId + BusinessMessages.CAR_DAMAGE_NOT_FOUND);
         }
     }
 }

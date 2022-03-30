@@ -1,6 +1,7 @@
 package com.turkcell.rentACar.business.concrates;
 
 import com.turkcell.rentACar.business.abstracts.CustomerService;
+import com.turkcell.rentACar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentACar.core.exception.BusinessException;
 import com.turkcell.rentACar.dataAccess.abstracts.CustomerDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,9 @@ public class CustomerManager implements CustomerService {
     }
 
     @Override
-    public void chechIfCustomerIdExist(int customerId) throws BusinessException {
+    public void checkIfCustomerIdExist(int customerId) throws BusinessException {
         if (!this.customerDao.existsById(customerId)) {
-            throw new BusinessException(customerId + " No'lu Müşteri Bulunamadı...");
+            throw new BusinessException(customerId + BusinessMessages.CUSTOMER_NOT_FOUND);
         }
     }
 }
