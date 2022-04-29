@@ -41,7 +41,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 
     @Override
     public Result update(UpdateIndividualCustomerRequest updateIndividualCustomerRequest) throws BusinessException {
-        checkIfIndividualCustomerIdExists(updateIndividualCustomerRequest.getCustomerId());
+        checkIfIndividualCustomerIdExists(updateIndividualCustomerRequest.getUserId());
 
         IndividualCustomer individualCustomer = this.modelMapperService.forRequest().map(updateIndividualCustomerRequest, IndividualCustomer.class);
         this.individualCustomerDao.save(individualCustomer);
@@ -50,10 +50,10 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 
     @Override
     public Result delete(DeleteIndividualCustomerRequest deleteIndividualCustomerRequest) throws BusinessException {
-        checkIfIndividualCustomerIdExists(deleteIndividualCustomerRequest.getCustomerId());
+        checkIfIndividualCustomerIdExists(deleteIndividualCustomerRequest.getUserId());
 
         IndividualCustomer individualCustomer = this.modelMapperService.forRequest().map(deleteIndividualCustomerRequest, IndividualCustomer.class);
-        this.individualCustomerDao.delete(individualCustomer);
+        this.individualCustomerDao.deleteById(individualCustomer.getUserId());
         return new SuccessResult(BusinessMessages.DELETED);
     }
 

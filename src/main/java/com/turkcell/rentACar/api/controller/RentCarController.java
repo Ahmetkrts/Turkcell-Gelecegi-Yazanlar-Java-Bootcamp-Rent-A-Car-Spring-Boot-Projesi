@@ -34,7 +34,7 @@ public class RentCarController {
         return this.rentCarService.updateForReturnCar(updateReturnCarRequest);
     }
 
-    @PostMapping("/addForIndividual")
+   /* @PostMapping("/addForIndividual")
     Result addForIndividual(@RequestBody @Valid CreateRentCarRequest createRentCarRequest) throws BusinessException {
         return this.rentCarService.addForIndividual(createRentCarRequest);
     }
@@ -42,7 +42,7 @@ public class RentCarController {
     @PostMapping("/addForCorporate")
     Result addForCorporate(@RequestBody @Valid CreateRentCarRequest createRentCarForCorporateRequest) throws BusinessException {
         return this.rentCarService.addForCorporate(createRentCarForCorporateRequest);
-    }
+    }*/
 
     @PutMapping("/update")
     Result update(@RequestBody @Valid UpdateRentCarRequest updateRentCarRequest) throws BusinessException {

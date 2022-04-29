@@ -16,8 +16,6 @@ public class UpdateCreditCardRequest {
 
     private int creditCardId;
     @NotNull
-    private String creditCardTitle;
-    @NotNull
     private String holderName;
     @NotNull
     @Size(min = 16, max = 16)

@@ -90,7 +90,7 @@ public class CreditCardManager implements CreditCardService {
 
 
     public void checkIfCreditCardNoExist(String creditCardNo) throws BusinessException {
-        if (!this.creditCardDao.existsByCardNo(creditCardNo)) {
+        if (this.creditCardDao.existsByCardNo(creditCardNo)) {
             throw new BusinessException(creditCardNo + BusinessMessages.CREDİT_SAME_CARD_NO);
         }
     }

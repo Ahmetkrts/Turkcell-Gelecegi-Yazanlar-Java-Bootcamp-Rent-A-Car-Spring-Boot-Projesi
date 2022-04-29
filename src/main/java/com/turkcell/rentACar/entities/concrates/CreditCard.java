@@ -19,9 +19,6 @@ public class CreditCard {
     @Column(name = "credit_card_id")
     private int creditCardId;
 
-    @Column(name = "credit_card_title")
-    private String creditCardTitle;
-
     @Column(name = "holder_name")
     private String holderName;
     @Column(name = "card_no")

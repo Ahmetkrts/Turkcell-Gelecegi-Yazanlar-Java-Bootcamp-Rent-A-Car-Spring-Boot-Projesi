@@ -41,7 +41,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 
     @Override
     public Result update(UpdateCorporateCustomerRequest updateCorporateCustomerRequest) throws BusinessException {
-        checkIfCorporateCustomerIdExists(updateCorporateCustomerRequest.getCustomerId());
+        checkIfCorporateCustomerIdExists(updateCorporateCustomerRequest.getUserId());
 
         CorporateCustomer corporateCustomer = this.modelMapperService.forRequest().map(updateCorporateCustomerRequest, CorporateCustomer.class);
 
@@ -51,7 +51,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 
     @Override
     public Result delete(DeleteCorporateCustomerRequest deleteCorporateCustomerRequest) throws BusinessException {
-        checkIfCorporateCustomerIdExists(deleteCorporateCustomerRequest.getCustomerId());
+        checkIfCorporateCustomerIdExists(deleteCorporateCustomerRequest.getUserId());
 
         CorporateCustomer corporateCustomer = this.modelMapperService.forRequest().map(deleteCorporateCustomerRequest, CorporateCustomer.class);
         this.corporateCustomerDao.delete(corporateCustomer);

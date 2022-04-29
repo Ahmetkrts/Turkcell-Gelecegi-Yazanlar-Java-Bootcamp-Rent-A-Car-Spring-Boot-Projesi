@@ -13,8 +13,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class CreateCreditCardRequest {
 
-    @NotNull
-    private String creditCardTitle;
+
     @NotNull
     private String holderName;
     @NotNull

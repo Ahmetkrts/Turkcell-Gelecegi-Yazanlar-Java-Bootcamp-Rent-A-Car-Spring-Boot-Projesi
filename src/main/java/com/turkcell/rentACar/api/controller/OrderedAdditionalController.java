@@ -25,7 +25,7 @@ public class OrderedAdditionalController {
         this.orderedAdditionalService = orderedAdditionalService;
     }
 
-    @PostMapping("/add")
+   /* @PostMapping("/add")
     Result add(@RequestBody @Valid CreateOrderedAdditionalRequest createOrderedAdditionalRequest) throws BusinessException {
         return this.orderedAdditionalService.add(createOrderedAdditionalRequest);
     }
@@ -38,7 +38,7 @@ public class OrderedAdditionalController {
     @DeleteMapping("/delete")
     Result delete(@RequestBody DeleteOrderedAdditionalRequest deleteOrderedAdditionalRequest) throws BusinessException {
         return this.orderedAdditionalService.delete(deleteOrderedAdditionalRequest);
-    }
+    }*/
 
     @GetMapping("/getAll")
     DataResult<List<OrderedAdditionalListDto>> getAll() {

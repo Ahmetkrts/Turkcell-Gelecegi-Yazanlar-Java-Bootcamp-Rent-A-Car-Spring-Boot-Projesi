@@ -15,7 +15,7 @@ import javax.persistence.Table;
 @Table(name = "individual_customers")
 public class IndividualCustomer extends Customer {
 
-    @Column(name = "national_identity", length = 11)
+    @Column(name = "national_identity")
     private String nationalIdentity;
     @Column(name = "first_name")
     private String firstName;

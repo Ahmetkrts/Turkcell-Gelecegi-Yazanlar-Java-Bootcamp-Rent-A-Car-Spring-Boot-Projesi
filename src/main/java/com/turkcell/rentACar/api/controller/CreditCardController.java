@@ -41,10 +41,10 @@ public class CreditCardController {
         return this.creditCardService.getById(creditCardId);
     }
 
-    @PutMapping("/update")
+    /*@PutMapping("/update")
     Result update(@RequestBody @Valid UpdateCreditCardRequest updateCreditCardRequest) throws BusinessException {
         return this.creditCardService.update(updateCreditCardRequest);
-    }
+    }*/
 
     @DeleteMapping("/delete")
     Result delete(@RequestBody DeleteCreditCardRequest deleteCreditCardRequest) throws BusinessException {

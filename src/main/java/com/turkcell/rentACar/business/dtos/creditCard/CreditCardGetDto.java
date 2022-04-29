@@ -12,7 +12,6 @@ import java.time.LocalDate;
 public class CreditCardGetDto {
 
     private int creditCardId;
-    private String creditCardTitle;
 
     private String holderName;
 

@@ -6,6 +6,7 @@ import com.turkcell.rentACar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentACar.business.dtos.payment.PaymentGetDto;
 import com.turkcell.rentACar.business.dtos.payment.PaymentListDto;
 import com.turkcell.rentACar.business.request.creditCard.CreateCreditCardForPaymentRequest;
+import com.turkcell.rentACar.business.request.creditCard.CreateCreditCardRequest;
 import com.turkcell.rentACar.business.request.invoice.CreateInvoiceRequest;
 import com.turkcell.rentACar.business.request.payment.CreateExtraPaymentRequest;
 import com.turkcell.rentACar.business.request.payment.CreatePaymentRequest;
@@ -41,6 +42,7 @@ public class PaymentManager implements PaymentService {
     private InvoiceService invoiceService;
     private RentCarService rentCarService;
     private CustomerService customerService;
+    private CreditCardService creditCardService;
 
     @Autowired
     public PaymentManager(PaymentDao paymentDao, ModelMapperService modelMapperService,
@@ -50,7 +52,8 @@ public class PaymentManager implements PaymentService {
                           CarService carService,
                           InvoiceService invoiceService,
                           RentCarService rentCarService,
-                          CustomerService customerService) {
+                          CustomerService customerService,
+                          CreditCardService creditCardService) {
         this.paymentDao = paymentDao;
         this.modelMapperService = modelMapperService;
         this.bankService = bankService;
@@ -60,6 +63,7 @@ public class PaymentManager implements PaymentService {
         this.invoiceService = invoiceService;
         this.rentCarService = rentCarService;
         this.customerService = customerService;
+        this.creditCardService = creditCardService;
     }
 
     @Override
@@ -140,6 +144,16 @@ public class PaymentManager implements PaymentService {
         }
     }
 
+    private void checkIfCreditCardSave(CreatePaymentRequest createPaymentRequest) throws BusinessException {
+        CreateCreditCardRequest request = this.modelMapperService.forRequest().map(createPaymentRequest.getCreateCreditCardForPaymentRequest(), CreateCreditCardRequest.class);
+        request.setCustomer_UserId(createPaymentRequest.getRentCarRequest().getCustomer_UserId());
+
+        if (createPaymentRequest.isSaveCreditCard()) {
+
+            this.creditCardService.add(request);
+        }
+    }
+
     private double totalFeeCalculator(CreatePaymentRequest createPaymentRequest) throws BusinessException {
         this.customerService.checkIfCustomerIdExist(createPaymentRequest.getRentCarRequest().getCustomer_UserId());
         this.carService.checkIfCarExist(createPaymentRequest.getRentCarRequest().getCarId());
@@ -152,7 +166,7 @@ public class PaymentManager implements PaymentService {
 
     private void checkIfPaymentDone(CreateCreditCardForPaymentRequest creditCard, double totalFee) throws BusinessException {
         if (!this.bankService.payment(creditCard, totalFee)) {
-            throw new BusinessException("Ödeme başarısız..");
+            throw new BusinessException(BusinessMessages.PAYMENT_FAILED);
         }
     }
 
@@ -160,6 +174,7 @@ public class PaymentManager implements PaymentService {
     Integer PaymentSuccessor(CreatePaymentRequest createPaymentRequest, double totalFee) throws BusinessException {
         CreateCreditCardForPaymentRequest creditCard = createPaymentRequest.getCreateCreditCardForPaymentRequest();
         checkIfPaymentDone(creditCard, totalFee);
+        checkIfCreditCardSave(createPaymentRequest);
 
         RentCar rentCar = this.modelMapperService.forRequest().map(createPaymentRequest.getRentCarRequest(), RentCar.class);
         Integer createdRentCarId = this.rentCarService.addForIndividual(createPaymentRequest.getRentCarRequest()).getData();

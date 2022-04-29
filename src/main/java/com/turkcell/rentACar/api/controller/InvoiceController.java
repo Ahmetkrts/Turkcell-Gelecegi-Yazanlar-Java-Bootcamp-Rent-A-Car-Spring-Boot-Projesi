@@ -27,10 +27,10 @@ public class InvoiceController {
         this.invoiceService = invoiceService;
     }
 
-    @PostMapping("/add")
+    /*@PostMapping("/add")
     Result add(@RequestBody @Valid CreateInvoiceRequest createInvoiceRequest) throws BusinessException {
         return this.invoiceService.add(createInvoiceRequest);
-    }
+    }*/
 
     @PutMapping("/update")
     Result update(@RequestBody @Valid UpdateInvoiceRequest updateInvoiceRequest) throws BusinessException {

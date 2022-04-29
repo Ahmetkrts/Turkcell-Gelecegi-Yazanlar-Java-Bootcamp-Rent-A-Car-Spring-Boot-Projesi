@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 
 @Data
@@ -13,8 +14,9 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class UpdateIndividualCustomerRequest {
 
-    private int customerId;
     @NotNull
+    private int userId;
+    @Pattern(regexp = "^[1-9][0-9]{9}[02468]$")
     private String nationalIdentity;
     @NotNull
     private String firstName;
@@ -23,6 +25,6 @@ public class UpdateIndividualCustomerRequest {
     @NotNull
     @Email
     private String Email;
-    @NotNull
+    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")
     private String password;
 }

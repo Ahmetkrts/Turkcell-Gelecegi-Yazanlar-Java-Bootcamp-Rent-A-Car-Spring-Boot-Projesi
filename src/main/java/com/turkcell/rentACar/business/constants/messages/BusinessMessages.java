@@ -77,6 +77,7 @@ public class BusinessMessages {
     /*PAYMENT BUSINESS MESSAGE*/
     public static final String PAYMENT_NOT_FOUND = " NO'LU ÖDEME BULUNAMADI";
     public static final String PAYMENT_LISTED = " NO'LU ÖDEME LİSTELENDİ";
+    public static final String PAYMENT_FAILED = "ÖDEME BAŞARISIZ";
 
     /*---------------------------*/
     /*RENTCAR BUSINESS MESSAGE*/

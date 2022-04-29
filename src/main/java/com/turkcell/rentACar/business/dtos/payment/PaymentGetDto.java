@@ -11,7 +11,6 @@ public class PaymentGetDto {
 
     private int paymentId;
     private double totalPaymentAmount;
-    private String rentCar_Car_Desciription;
 
 
 }

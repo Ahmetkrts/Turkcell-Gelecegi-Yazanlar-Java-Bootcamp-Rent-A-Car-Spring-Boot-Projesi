@@ -18,11 +18,12 @@ import java.util.Map;
 /*
  *
  *  #Çalışmayan kısımlar
- * Customer silme işlemleri sıkıntılı silme gerçekleşmiyor
- * Customerler için password ve email için regex kontrolünü ekle
+
  *
  *
- * Card kaydetme olayını ayarla (bu olayı front end'ciye bıraktım)
+ *
+ *
+ * Liste temizlendi..
  * */
 
 @SpringBootApplication
